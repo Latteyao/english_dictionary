@@ -73,14 +73,7 @@ extension DataViewModel {
 extension DataViewModel {
   /// 拉取單一單字資料
    /// - Parameter word: 要拉取的單字
-   /// - Returns: 包含 `WordData` 的 `AnyPublisher`，若失敗則返回 `DatafetchError`
-  func fetchData(word: String) -> AnyPublisher<WordData, WordApiManager.DatafetchError> {
-    dataManager.performFetchData(for: word)
-      .receive(on: DispatchQueue.main)
-      .eraseToAnyPublisher()
-  }
-  
-  func fetchData1(word: String){
+  func fetchData(word: String){
     clearViewData() // 清除 viewModel 狀態
     dataManager.performFetchData(for: word)
       .mapError { apiError -> WordDetailStateError in

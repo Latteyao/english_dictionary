@@ -155,7 +155,7 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let resultdata = searchViewModel.searchResults.results.data?[indexPath.row] else { return }
-    dataViewModel.fetchData1(word: resultdata)
+    dataViewModel.fetchData(word: resultdata)
         DispatchQueue.main.async {
           let wordDetailViewController = WordDetailViewController(viewModel: self.dataViewModel)
           print("navigation push to \(wordDetailViewController)")
