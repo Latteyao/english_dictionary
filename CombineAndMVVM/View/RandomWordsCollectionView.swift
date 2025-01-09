@@ -111,7 +111,8 @@ extension RandomWordsCollectionView {
   
   @objc func reroll() {
     viewModel.rollDice() //呼叫 viewModel 擲骰子
-    Task { await viewModel.fetchAllpopularWords() } // fetch api Data to randomData
+//    Task { await viewModel.fetchAllpopularWords() } // fetch api Data to randomData
+    viewModel.fetchAllpopularWords()
     collectionView.reloadData()
 //    coreData.clearEntityData(entityName: "Bookmark") // FIX: - 目前是重置 core data entity Bookmark 按鈕
   }
@@ -128,6 +129,7 @@ extension RandomWordsCollectionView: UICollectionViewDataSource, UICollectionVie
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell
     let word = viewModel.popularWords[indexPath.item]
 //    let word = viewController.viewModel.popularWords[indexPath.item]
+    // popularWordsErrorState[indexPath.item]
     cell.configure(with: word, in: indexPath.item)
     cell.delegate = delegate
     

@@ -41,7 +41,8 @@ extension ViewController {
   }
 
   private func viewModelCall() {
-    Task { await dataViewModel.fetchAllpopularWords() }
+//    Task { await dataViewModel.fetchAllpopularWords() }
+    dataViewModel.fetchAllpopularWords()
   }
 }
 
@@ -147,9 +148,9 @@ extension ViewController {
 extension ViewController: WordCollectionViewCellDelegate {
   /// 按下按鈕事件觸發後頁面轉Detail View
   func didTapWordButton(with word: String, in index: Int) {
-    dataViewModel.newViewData(Data: dataViewModel.randomData[index])
+    dataViewModel.newViewData(fallbackWord: word, form: dataViewModel.randomData[index])
+    dataViewModel.errorState = dataViewModel.popularWordsErrorState[index].description
     let wordDetailViewController = WordDetailViewController(viewModel: dataViewModel)
-    
 //    let transition = CATransition()
 //    transition.type = .push  // 可以選擇其他效果：.push, .reveal 等
 //            transition.subtype = .fromRight  // 設定過渡的方向
