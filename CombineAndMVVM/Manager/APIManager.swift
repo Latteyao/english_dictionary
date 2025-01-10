@@ -27,7 +27,7 @@ class WordApiManager {
 
 extension WordApiManager {
   /// 從模擬數據管理器抓取單字數據
-  func fetchWordDataFromMock<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, DatafetchError> {
+  func fetchMockData<T: Codable>(_ endpoint: Endpoint) -> AnyPublisher<T, DatafetchError> {
     let endpointURL = endpoint.request.url!.description
     var wordKey = ""
     switch endpoint {
@@ -93,8 +93,8 @@ extension WordApiManager {
   }
 
   /// 根據給定的端點從網絡上抓取數據
-  func fetchPublisher<T: Codable>(endpoint: Endpoint) -> AnyPublisher<T, DatafetchError> {
-    if isMockEnabled { return fetchWordDataFromMock(endpoint) }
+  func fetchData<T: Codable>(endpoint: Endpoint) -> AnyPublisher<T, DatafetchError> {
+    if isMockEnabled { return fetchMockData(endpoint) }
     let urlRequest = endpoint.request
     return session.dataTaskPublisher(for: urlRequest)
       .tryMap { output in
