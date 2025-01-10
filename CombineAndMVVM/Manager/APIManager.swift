@@ -12,7 +12,7 @@ import Foundation
 class WordApiManager {
   // MARK: - Properties
       
-  private let isMockEnabled: Bool = true
+  private let isMockEnabled: Bool = false
   private let session: URLSession = {
     let config = URLSessionConfiguration.default
     config.httpAdditionalHeaders = [

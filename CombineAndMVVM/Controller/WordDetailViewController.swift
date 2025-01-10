@@ -193,7 +193,7 @@ extension WordDetailViewController {
     dataViewModel?.$errorState
       .receive(on: DispatchQueue.main)
       .sink(receiveValue: { [weak self] error in
-        guard let self = self, let error = error else { return }
+        guard let self = self, let error = error , error != "" else { return }
         self.showError(error.description)
       })
       .store(in: &cancellables)

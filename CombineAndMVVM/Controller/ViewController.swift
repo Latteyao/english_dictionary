@@ -149,7 +149,7 @@ extension ViewController: WordCollectionViewCellDelegate {
   /// 按下按鈕事件觸發後頁面轉Detail View
   func didTapWordButton(with word: String, in index: Int) {
     dataViewModel.newViewData(fallbackWord: word, form: dataViewModel.randomData[index])
-    dataViewModel.errorState = dataViewModel.popularWordsErrorState[index].description
+    dataViewModel.errorState = dataViewModel.popularWordsErrorState[index]
     let wordDetailViewController = WordDetailViewController(viewModel: dataViewModel)
 //    let transition = CATransition()
 //    transition.type = .push  // 可以選擇其他效果：.push, .reveal 等

@@ -64,49 +64,64 @@ extension DataManager {
   /// 建立熱門單字的 Publisher，並根據輸入的單字列表依序抓取對應的資料
   /// - Parameter array: 要抓取資料的單字列表
   /// - Returns: 傳送包含 `WordData` 的 Publisher，若發生錯誤將自動回傳空資料
-  func createPopularWordsPublisher(_ array: [String]) -> AnyPublisher<[WordData], DatafetchError> {
-    Publishers.Sequence(sequence: array.enumerated())
-      .flatMap { [weak self] index, word -> AnyPublisher<(Int, WordData), DatafetchError> in
-        guard let self = self else {
-          //          return Just((index, WordData.empty)).eraseToAnyPublisher()
-          return Fail(outputType: (Int, WordData).self, failure: .unknownError).eraseToAnyPublisher()
-        }
-        return self.fetchPublisher(endpoint: Endpoint.general(for: word))
-          .map { (index, $0) } // 包含索引與資料，便於後續排序
-        //          .replaceError(with: (index, WordData.empty)) // 發生錯誤時回傳空資料
-          .eraseToAnyPublisher()
-      }
-      .collect()
-      .map { results in
-        results.sorted(by: { $0.0 < $1.0 }).map { $0.1 }
-      }
-      .eraseToAnyPublisher()
-  }
+//  func createPopularWordsPublisher(_ array: [String]) -> AnyPublisher<[WordData], DatafetchError> {
+//    Publishers.Sequence(sequence: array.enumerated())
+//      .flatMap { [weak self] index, word -> AnyPublisher<(Int, WordData), DatafetchError> in
+//        guard let self = self else {
+//          //          return Just((index, WordData.empty)).eraseToAnyPublisher()
+//          return Fail(outputType: (Int, WordData).self, failure: .unknownError).eraseToAnyPublisher()
+//        }
+//        return self.fetchPublisher(endpoint: Endpoint.general(for: word))
+//          .map { (index, $0) } // 包含索引與資料，便於後續排序
+//        //          .replaceError(with: (index, WordData.empty)) // 發生錯誤時回傳空資料
+//          .eraseToAnyPublisher()
+//      }
+//      .collect()
+//      .map { results in
+//        results.sorted(by: { $0.0 < $1.0 }).map { $0.1 }
+//      }
+//      .eraseToAnyPublisher()
+//  }
   /// 建立熱門單字的 Publisher，並根據輸入的單字列表依序抓取對應的資料
       /// - Parameter array: 要抓取資料的單字列表
-      /// - Returns: 傳送包含 `WordData` 和錯誤描述的 Publisher
-  func createPopularWordsPublisher1(_ array: [String]) -> AnyPublisher<[(WordData, String?, Int)], DatafetchError> {
+      /// - Returns: 待修改
+  func createPopularWordsPublisher(_ array: [String]) -> AnyPublisher<[(Int, WordData, String?)], DataViewModel.WordDetailStateError> {
     Publishers.Sequence(sequence: array.enumerated())
-      .flatMap { [weak self] index, word -> AnyPublisher<(WordData, String?, Int), DatafetchError> in
+      .flatMap { [weak self] index, word -> AnyPublisher<(Int, WordData, String?), DataViewModel.WordDetailStateError> in
         guard let self = self else {
-          return Fail(outputType: (WordData, String?, Int).self, failure: .unknownError).eraseToAnyPublisher()
+          return Fail(outputType: (Int, WordData, String?).self, failure: .otherError).eraseToAnyPublisher()
         }
         return self.fetchPublisher(endpoint: Endpoint.general(for: word))
+          .mapError({ apiError -> DataViewModel.WordDetailStateError in
+            switch apiError {
+            case .invalidResponse:
+                return .networkError
+            case .invalidData:
+                return .notFouundData
+            case .networkError:
+                return .networkError
+            case .unknownError:
+                return .otherError
+            }
+          })
           .map { wordData in
             // 成功時返回資料、無錯誤描述，以及原始索引
-            return (wordData, nil, index)
+            return (index, wordData, nil)
           }
-          .catch { error -> Just<(WordData, String?, Int)> in
+          .catch { error -> Just<(Int, WordData, String?)> in
             // 錯誤時返回空資料、錯誤描述，以及原始索引
-            let errorDescription = error.localizedDescription
+            let errorDescription = error.description
             let emptyData = WordData.empty
-            return Just((emptyData, errorDescription, index))
+            return Just((index, emptyData, errorDescription))
           }
-          .setFailureType(to: DatafetchError.self)
+          .setFailureType(to: DataViewModel.WordDetailStateError.self)
           .eraseToAnyPublisher()
         
       }
       .collect()
+      .map { results in
+        results.sorted(by: { $0.0 < $1.0 })
+      }
       .eraseToAnyPublisher()
   }
 }

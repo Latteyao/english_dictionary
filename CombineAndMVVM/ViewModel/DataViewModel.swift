@@ -93,7 +93,6 @@ extension DataViewModel {
 }
 
 // MARK: - Fetch Methods
-
 extension DataViewModel {
   /// 拉取單一單字資料
   /// - Parameter word: 要拉取的單字
@@ -105,54 +104,14 @@ extension DataViewModel {
         guard let self = self else {
           return Fail<WordData, DataViewModel.WordDetailStateError>(error: WordDetailStateError.otherError).eraseToAnyPublisher()
         }
-//        self.viewData.word = wordData.word
         return validateWordData(wordData)
       }
-    //      .mapError { apiError -> WordDetailStateError in
-    //        switch apiError{
-    //        case .invalidResponse:
-    //          return .networkError
-    //        case .invalidData:
-    //          return .notFouundData
-    //        case .networkError:
-    //          return .networkError
-    //        case .unknownError:
-    //          return .otherError
-    //        }
-    //      }
-    //      .flatMap { wordData -> AnyPublisher<WordData, WordDetailStateError> in
-    //        self.viewData.word = wordData.word
-    //        if wordData.word == nil, wordData.word == "" {
-    //          return Fail(outputType: WordData.self, failure: .notFouundData)
-    //            .eraseToAnyPublisher()
-    //        }
-    //        if wordData.results == nil {
-    //          return Fail(outputType: WordData.self, failure: .notFoundAnnotation)
-    //            .eraseToAnyPublisher()
-    //        }
-    //        return Just(wordData)
-    //          .setFailureType(to: WordDetailStateError.self)
-    //          .eraseToAnyPublisher()
-    //      }
       .catch({ [weak self] error -> AnyPublisher<WordData, Never> in
         self?.viewData.word = word // 資料沒有 View 還能顯示目標字
         self?.errorState = error.description
         print("Error massage: \(error.description)")
         return Empty(completeImmediately: true).eraseToAnyPublisher()
       })
-    
-//          .sink { completion in
-//            switch completion{
-//            case .finished:
-//              break
-//            case .failure(_):
-//              break
-//            }
-//          } receiveValue: { [weak self] wordData in
-//            self?.viewData = .empty
-//            self?.viewData = wordData
-//            self?.errorState = nil // 清除之前的错误状态
-//          }
       .sink(receiveValue: { [weak self] wordData in
         print("Word: \(wordData.word ?? "nil")")
         self?.viewData = wordData
@@ -162,31 +121,30 @@ extension DataViewModel {
   }
   
   /// 拉取所有熱門單字的資料，並更新 `randomData`
-  func fetchAllpopularWords() async {
-    print(popularWords)
-    dataManager.createPopularWordsPublisher(popularWords)
-      .receive(on: DispatchQueue.main) // 在主執行緒上接收資料
-      .sink { completion in
-        switch completion {
-        case .finished:
-          print("All popular words have been fetched")
-        case .failure(let error):
-          print("An error occurred while fetching popular words: \(error)")
-        }
-      } receiveValue: { [weak self] dataArray in
-        // 更新 `randomData`，避免強循環
-        self?.randomData.append(contentsOf: dataArray)
-      }
-      .store(in: &cancellables) // 儲存訂閱以便後續釋放
-  }
+//  func fetchAllpopularWords() async {
+//    print(popularWords)
+//    dataManager.createPopularWordsPublisher(popularWords)
+//      .receive(on: DispatchQueue.main) // 在主執行緒上接收資料
+//      .sink { completion in
+//        switch completion {
+//        case .finished:
+//          print("All popular words have been fetched")
+//        case .failure(let error):
+//          print("An error occurred while fetching popular words: \(error)")
+//        }
+//      } receiveValue: { [weak self] dataArray in
+//        // 更新 `randomData`，避免強循環
+//        self?.randomData.append(contentsOf: dataArray)
+//      }
+//      .store(in: &cancellables) // 儲存訂閱以便後續釋放
+//  }
   
   
   func fetchAllpopularWords(){
     // 清空數據與錯誤狀態
     clearRandomDataAndPopularWordsErrorStates()
-    dataManager.createPopularWordsPublisher1(popularWords)
+    dataManager.createPopularWordsPublisher(popularWords)
       .receive(on: DispatchQueue.main)
-      .mapError(mapApiError)
       .sink { completion in
         switch completion {
         case .finished:
@@ -196,12 +154,12 @@ extension DataViewModel {
         }
       } receiveValue: { [ weak self ] results in
         // 根據原始索引排序
-        let sortedResults = results.sorted { $0.2 < $1.2 }
-        sortedResults.forEach { wordData, errorDescription, _ in
+        results.forEach { _, wordData, errorDescription in
           self?.randomData.append(wordData) // 成功資料放在 randomData
           if let errorDescription = errorDescription{
             self?.popularWordsErrorState.append(errorDescription) // 錯誤描述放在 popularWordsErrorState
-          } else {
+          }
+          else {
             self?.popularWordsErrorState.append("") // 成功的資料也放一個 "Success" 表示成功
           }
         }
