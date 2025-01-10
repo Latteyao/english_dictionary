@@ -39,7 +39,7 @@ extension DataManager {
   /// - Returns: 泛型 `AnyPublisher`，若發生錯誤則回傳自訂錯誤類型 `DatafetchError`
   func performFetchData(for word: String) -> AnyPublisher<WordData, DatafetchError>  {
     let endpoint = Endpoint.general(for: word)
-    return fetchPublisher(endpoint: endpoint)
+    return fetchData(endpoint: endpoint)
   }
 }
 
@@ -71,7 +71,7 @@ extension DataManager {
 //          //          return Just((index, WordData.empty)).eraseToAnyPublisher()
 //          return Fail(outputType: (Int, WordData).self, failure: .unknownError).eraseToAnyPublisher()
 //        }
-//        return self.fetchPublisher(endpoint: Endpoint.general(for: word))
+//        return self.fetchData(endpoint: Endpoint.general(for: word))
 //          .map { (index, $0) } // 包含索引與資料，便於後續排序
 //        //          .replaceError(with: (index, WordData.empty)) // 發生錯誤時回傳空資料
 //          .eraseToAnyPublisher()
@@ -85,13 +85,13 @@ extension DataManager {
   /// 建立熱門單字的 Publisher，並根據輸入的單字列表依序抓取對應的資料
       /// - Parameter array: 要抓取資料的單字列表
       /// - Returns: 待修改
-  func createPopularWordsPublisher(_ array: [String]) -> AnyPublisher<[(Int, WordData, String?)], DataViewModel.WordDetailStateError> {
+  func createPopularWordsPublisher(_ array: [String]) -> AnyPublisher<[PopularWordResult], DataViewModel.WordDetailStateError> {
     Publishers.Sequence(sequence: array.enumerated())
-      .flatMap { [weak self] index, word -> AnyPublisher<(Int, WordData, String?), DataViewModel.WordDetailStateError> in
+      .flatMap { [weak self] index, word -> AnyPublisher<PopularWordResult, DataViewModel.WordDetailStateError> in
         guard let self = self else {
-          return Fail(outputType: (Int, WordData, String?).self, failure: .otherError).eraseToAnyPublisher()
+          return Fail(outputType: PopularWordResult.self, failure: .otherError).eraseToAnyPublisher()
         }
-        return self.fetchPublisher(endpoint: Endpoint.general(for: word))
+        return self.fetchData(endpoint: Endpoint.general(for: word))
           .mapError({ apiError -> DataViewModel.WordDetailStateError in
             switch apiError {
             case .invalidResponse:
@@ -106,13 +106,13 @@ extension DataManager {
           })
           .map { wordData in
             // 成功時返回資料、無錯誤描述，以及原始索引
-            return (index, wordData, nil)
+            return PopularWordResult(index: index, wordData: wordData, errorDescription: nil)
           }
-          .catch { error -> Just<(Int, WordData, String?)> in
+          .catch { error -> Just<PopularWordResult> in
             // 錯誤時返回空資料、錯誤描述，以及原始索引
             let errorDescription = error.description
             let emptyData = WordData.empty
-            return Just((index, emptyData, errorDescription))
+            return Just(PopularWordResult(index: index, wordData: emptyData, errorDescription: error.description))
           }
           .setFailureType(to: DataViewModel.WordDetailStateError.self)
           .eraseToAnyPublisher()
@@ -120,7 +120,7 @@ extension DataManager {
       }
       .collect()
       .map { results in
-        results.sorted(by: { $0.0 < $1.0 })
+        results.sorted(by: { $0.index < $1.index })
       }
       .eraseToAnyPublisher()
   }
@@ -132,5 +132,13 @@ extension DataManager {
   enum FetchDataResultsState {
     case success(ResponseModel) // 成功，並返回 ResponseModel
     case failure(DatafetchError) // 失敗，並返回 DatafetchError
+  }
+}
+
+extension DataManager{
+  struct PopularWordResult {
+      let index: Int
+      let wordData: WordData
+      let errorDescription: String?
   }
 }

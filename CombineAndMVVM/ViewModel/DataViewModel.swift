@@ -154,9 +154,9 @@ extension DataViewModel {
         }
       } receiveValue: { [ weak self ] results in
         // 根據原始索引排序
-        results.forEach { _, wordData, errorDescription in
-          self?.randomData.append(wordData) // 成功資料放在 randomData
-          if let errorDescription = errorDescription{
+        results.forEach { results in
+          self?.randomData.append(results.wordData) // 成功資料放在 randomData
+          if let errorDescription = results.errorDescription{
             self?.popularWordsErrorState.append(errorDescription) // 錯誤描述放在 popularWordsErrorState
           }
           else {

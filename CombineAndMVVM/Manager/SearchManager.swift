@@ -27,7 +27,7 @@ extension SearchManager {
     ///   - completion: 回呼結果，包含成功或失敗狀態
   func performSearch(with query: String, completion: @escaping (Result<ResponseModel, DatafetchError>) -> Void) {
     let endpoint = Endpoint.search(for: query)
-    fetchPublisher(endpoint: endpoint)
+    fetchData(endpoint: endpoint)
       .handleEvents()
       .sink { completionResult in
         switch completionResult {
