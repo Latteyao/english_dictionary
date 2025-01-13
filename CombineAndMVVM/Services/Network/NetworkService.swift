@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol NetworkService {
-  func fetchData<T: Codable>(endpoint: Endpoint.RequestPath) -> AnyPublisher<T, NetworkError>
+  func fetchData<T: Codable>(_ endpoint: Endpoint.RequestPath) -> AnyPublisher<T, NetworkError>
 }
 
 

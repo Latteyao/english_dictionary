@@ -20,6 +20,13 @@ class WordApiManager {
     self.mockDataManager = mockDataManager
     self.networkManager = networkManager
   }
+  
+  func fetchData<T: Codable>(_ endpoint:Endpoint.RequestPath) -> AnyPublisher<T,NetworkError>{
+    guard isMockEnabled else {
+      return mockDataManager.fetchMockData(endpoint)
+    }
+    return networkManager.fetchData(endpoint)
+  }
 
 }
 
