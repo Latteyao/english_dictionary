@@ -9,24 +9,24 @@ import Foundation
 import Combine
 
 protocol NetworkService {
-  func fetchData<T: Codable>(endpoint: Endpoint) -> AnyPublisher<T, DatafetchError>
+  func fetchData<T: Codable>(endpoint: Endpoint.RequestPath) -> AnyPublisher<T, NetworkError>
 }
 
 
 
 protocol NetworkErrorHandler: NetworkService {
-  func handleNetworkError(_ error: Error) -> DatafetchError
+  func handleNetworkError(_ error: Error) -> NetworkError
 }
 
 extension NetworkErrorHandler{
-  func handleNetworkError(_ error: Error) -> DatafetchError {
+  func handleNetworkError(_ error: Error) -> NetworkError {
     if let decodingError = error as? DecodingError {
       print("Error decoding JSON: \(decodingError.localizedDescription)")
       return .invalidResponse
     }
     if let urlError = error as? URLError {
       print("Error fetching data: \(urlError.localizedDescription)")
-      return .networkError
+      return .networkFailure
     }
     return .unknownError
   }

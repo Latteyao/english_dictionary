@@ -13,11 +13,14 @@ import Combine
 
 class MockDataManager: MockDataService, MockDataDecodable {
   
-  func fetchMockData<T: Codable>(_ endpoint: Endpoint.RequestPath) -> AnyPublisher<T, NetworkError>{
+  func fetchMockData<T: Codable>(_ endpoint: Endpoint.EndpointType) -> AnyPublisher<T, NetworkError>{
     let endpointURL = endpoint.url.description
     var wordKey = ""
     var mockResponseData: Data?
     switch endpoint {
+//    case .general(for: _):
+//      wordKey = endpointURL.replacingOccurrences(of: "https://wordsapiv1.p.rapidapi.com/words/", with: "")
+//      mockResponseData = MockGeneralManager(rawValue: wordKey)?.stub
     case .general(for: _):
       wordKey = endpointURL.replacingOccurrences(of: "https://wordsapiv1.p.rapidapi.com/words/", with: "")
       mockResponseData = MockGeneralManager(rawValue: wordKey)?.stub

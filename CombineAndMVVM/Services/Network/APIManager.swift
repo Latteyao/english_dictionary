@@ -23,13 +23,16 @@ class WordApiManager {
 
 }
 
-// MARK: - Methods
-
-extension WordApiManager {
-  
-}
 
 // MARK: - Error Handling Enum
+
+
+enum NetworkError: Error {
+  case invalidResponse
+  case invalidData
+  case networkFailure
+  case unknown
+}
 
 enum DatafetchError: Error {
   case invalidResponse
