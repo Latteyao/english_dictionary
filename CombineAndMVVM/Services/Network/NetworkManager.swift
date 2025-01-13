@@ -22,7 +22,7 @@ class NetworkManager: NetworkService, NetworkErrorHandler, NetworkResponseHandle
     self.session = URLSession(configuration: config)
   }
   /// 根據給定的端點從網絡上抓取數據
-  func fetchData<T: Codable>(endpoint: Endpoint) -> AnyPublisher<T, DatafetchError> {
+  func fetchData<T: Codable>(endpoint: Endpoint.RequestPath) -> AnyPublisher<T, NetworkError> {
     return session.dataTaskPublisher(for: endpoint.url)
       .tryMap { output in
         try self.handleResponse(output)
