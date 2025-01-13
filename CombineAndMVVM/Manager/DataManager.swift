@@ -14,8 +14,6 @@ class DataManager: WordApiManager, ObservableObject {
 
   static let shared = DataManager()
   
-  @Published var state: FetchDataResultsState!
-
   // MARK: - Properties
 
    var popularWords: [String: Int] = [:]

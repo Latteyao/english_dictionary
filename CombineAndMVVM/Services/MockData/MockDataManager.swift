@@ -1,0 +1,1064 @@
+//
+//  MockDataManager.swift
+//  CombineAndMVVM
+//
+//  Created by MacBook Pro on 2025/1/13.
+//
+
+import Foundation
+import UIKit
+import Combine
+
+
+
+class MockDataManager: MockDataService, MockDataDecodable {
+  
+  func fetchMockData<T: Codable>(_ endpoint: Endpoint.APIPath) -> AnyPublisher<T, DatafetchError>{
+    let endpointURL = Endpoint.init(path:endpoint).url.description
+    var wordKey = ""
+    var mockResponseData: Data?
+    switch endpoint {
+//    case .general(for: _):
+//      wordKey = endpointURL.replacingOccurrences(of: "https://wordsapiv1.p.rapidapi.com/words/", with: "")
+//      mockResponseData = MockGeneralManager(rawValue: wordKey)?.stub
+    case .general(for: _):
+      wordKey = endpointURL.replacingOccurrences(of: "https://wordsapiv1.p.rapidapi.com/words/", with: "")
+      mockResponseData = MockGeneralManager(rawValue: wordKey)?.stub
+
+    case .random:
+      wordKey = "https://wordsapiv1.p.rapidapi.com/words/?random=true"
+
+    case .search(for: _):
+      wordKey = endpointURL.replacingOccurrences(of: "https://wordsapiv1.p.rapidapi.com/words/?limit=100&letterPattern=", with: "")
+      mockResponseData = MockSearchManager(rawValue: wordKey)?.stub
+    }
+    guard let data = mockResponseData else {
+            return Fail(error: DatafetchError.invalidData)
+                .eraseToAnyPublisher()
+        }
+    return mockDataDecoder(data)
+  }
+}
+
+
+extension MockDataManager{
+  
+  // MARK: - Mock Data Enums
+
+  enum MockGeneralManager: String {
+    
+    case example
+    case popular
+    case word
+    case w
+    case wo
+    case wor
+  }
+
+  enum MockSearchManager: String {
+    case w
+    case wo
+    case wor
+    case word
+  }
+
+}
+
+
+
+  extension MockDataManager.MockGeneralManager {
+    var stub: Data {
+      var jsonString: String = ""
+      switch self {
+      case .example:
+        jsonString =
+        """
+        {
+            "word": "example",
+            "frequency": 4.67,
+            "syllables": {
+                "count": 3,
+                "list": ["ex", "am", "ple"]
+            },
+            "pronunciation": {
+                "all": "ɪɡ'zæmpəl"
+            },
+            "results": [
+                {
+                    "definition": "a representative form or pattern",
+                    "examples": ["I profited from his example"],
+                    "hasTypes": [
+                        "prefiguration",
+                        "archetype",
+                        "epitome",
+                        "guide",
+                        "holotype",
+                        "image",
+                        "loadstar",
+                        "lodestar",
+                        "microcosm",
+                        "original",
+                        "paradigm",
+                        "pilot",
+                        "prototype",
+                        "template",
+                        "templet",
+                        "type specimen"
+                    ],
+                    "typeOf": [
+                        "representation",
+                        "internal representation",
+                        "mental representation"
+                    ],
+                    "derivation": ["exemplify"],
+                    "partOfSpeech": "noun",
+                    "synonyms": ["model"]
+                },
+                {
+                    "definition": "something to be imitated",
+                    "examples": null,
+                    "hasTypes": [
+                        "pacemaker",
+                        "pattern",
+                        "beauty",
+                        "prodigy",
+                        "beaut",
+                        "pacesetter"
+                    ],
+                    "typeOf": ["ideal"],
+                    "derivation": ["exemplify", "exemplary"],
+                    "partOfSpeech": "noun",
+                    "synonyms": ["exemplar", "good example", "model"]
+                },
+                {
+                    "definition": "an occurrence of something",
+                    "examples": ["but there is always the famous example of the Smiths"],
+                    "hasTypes": [
+                        "clip",
+                        "mortification",
+                        "piece",
+                        "time",
+                        "humiliation",
+                        "bit"
+                    ],
+                    "typeOf": ["happening", "natural event", "occurrence", "occurrent"],
+                    "derivation": ["exemplify"],
+                    "partOfSpeech": "noun",
+                    "synonyms": ["case", "instance"]
+                },
+                {
+                    "definition": "an item of information that is typical of a class or group",
+                    "examples": [
+                        "this patient provides a typical example of the syndrome",
+                        "there is an example on page 10"
+                    ],
+                    "hasTypes": [
+                        "excuse",
+                        "apology",
+                        "specimen",
+                        "case in point",
+                        "sample",
+                        "exception",
+                        "quintessence",
+                        "precedent"
+                    ],
+                    "typeOf": ["information"],
+                    "derivation": ["exemplify", "exemplary"],
+                    "partOfSpeech": "noun",
+                    "synonyms": ["illustration", "instance", "representative"]
+                },
+                {
+                    "definition": "punishment intended as a warning to others",
+                    "examples": ["they decided to make an example of him"],
+                    "hasTypes": null,
+                    "typeOf": ["monition", "admonition", "word of advice", "warning"],
+                    "derivation": ["exemplary"],
+                    "partOfSpeech": "noun",
+                    "synonyms": ["deterrent example", "lesson", "object lesson"]
+                },
+                {
+                    "definition": "a task performed or problem solved in order to develop skill or understanding",
+                    "examples": [
+                        "you must work the examples at the end of each chapter in the textbook"
+                    ],
+                    "hasTypes": null,
+                    "typeOf": ["lesson"],
+                    "derivation": null,
+                    "partOfSpeech": "noun",
+                    "synonyms": ["exercise"]
+                }
+            ]
+        }
+        """
+        
+      case .popular:
+        jsonString =
+              """
+              {
+                  "word": "popular",
+                  "frequency": 4.43,
+                  "syllables": {
+                      "count": 3,
+                      "list": ["pop", "u", "lar"]
+                  },
+                  "pronunciation": {
+                      "all": "'pɑpjələr"
+                  },
+                  "results": [
+                      {
+                          "definition": "representing or appealing to or adapted for the benefit of the people at large",
+                          "examples": [
+                              "a democratic or popular movement",
+                              "popular thought",
+                              "popular science",
+                              "popular fiction"
+                          ],
+                          "partOfSpeech": "adjective",
+                          "synonyms": ["democratic"],
+                          "typeOf": null,
+                          "derivation": null,
+                          "hasTypes": null
+                      },
+                      {
+                          "definition": "(of music or art) new and of general appeal (especially among young people)",
+                          "examples": null,
+                          "partOfSpeech": "adjective",
+                          "synonyms": ["pop"],
+                          "typeOf": null,
+                          "derivation": ["popularity"],
+                          "hasTypes": null
+                      },
+                      {
+                          "definition": "carried on by or for the people (or citizens) at large",
+                          "examples": [
+                              "the popular vote",
+                              "popular representation",
+                              "institutions of popular government"
+                          ],
+                          "partOfSpeech": "adjective",
+                          "synonyms": null,
+                          "typeOf": null,
+                          "derivation": null,
+                          "hasTypes": null
+                      },
+                      {
+                          "definition": "regarded with great favor, approval, or affection especially by the general public",
+                          "examples": [
+                              "a popular tourist attraction",
+                              "a popular girl",
+                              "cabbage patch dolls are no longer popular"
+                          ],
+                          "partOfSpeech": "adjective",
+                          "synonyms": null,
+                          "typeOf": null,
+                          "derivation": ["popularity"],
+                          "hasTypes": null
+                      }
+                  ]
+              }
+              """
+        
+      case .word:
+        jsonString =
+              """
+              {
+                  "word": "word",
+                  "frequency": 5.32,
+                  "syllables": {
+                      "count": 1,
+                      "list": ["word"]
+                  },
+                  "pronunciation": {
+                      "all": "wɜrd"
+                  },
+                  "results": [
+                      {
+                          "definition": "the divine word of God; the second person in the Trinity (incarnate in Jesus)",
+                          "hasTypes": null,
+                          "hasInstances": [
+                              "messiah",
+                              "christ",
+                              "redeemer",
+                              "the nazarene",
+                              "good shepherd",
+                              "jesus of nazareth",
+                              "jesus christ",
+                              "jesus",
+                              "savior",
+                              "saviour",
+                              "deliverer"
+                          ],
+                          "typeOf": null,
+                          "instanceOf": [
+                              "hypostasis",
+                              "hypostasis of christ"
+                          ],
+                          "examples": null,
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": ["logos", "son"]
+                      },
+                      {
+                          "definition": "information about recent and important events",
+                          "hasTypes": ["good word", "latest"],
+                          "typeOf": ["information", "info"],
+                          "examples": null,
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": ["intelligence", "news", "tidings"]
+                      },
+                      {
+                          "definition": "an exchange of views on some topic",
+                          "examples": ["we had a word or two about it"],
+                          "hasTypes": [
+                              "argumentation",
+                              "talks",
+                              "dialogue",
+                              "ventilation",
+                              "public discussion",
+                              "postmortem",
+                              "post-mortem",
+                              "debate",
+                              "panel discussion",
+                              "group discussion",
+                              "argument",
+                              "deliberation",
+                              "conference",
+                              "negotiation"
+                          ],
+                          "typeOf": [
+                              "spoken language",
+                              "language",
+                              "spoken communication",
+                              "speech communication",
+                              "voice communication",
+                              "speech",
+                              "oral communication"
+                          ],
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": ["discussion", "give-and-take"]
+                      },
+                      {
+                          "definition": "a secret word or phrase known only to a restricted group",
+                          "examples": ["he forgot the password"],
+                          "typeOf": ["positive identification", "arcanum", "secret"],
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": ["countersign", "parole", "password", "watchword"]
+                      },
+                      {
+                          "definition": "the sacred writings of the Christian religions",
+                          "hasCategories": [
+                              "exegesis",
+                              "eisegesis",
+                              "covenant",
+                              "demythologise",
+                              "noachian deluge",
+                              "noah's flood",
+                              "noah and the flood",
+                              "demythologize",
+                              "the flood",
+                              "gabriel"
+                          ],
+                          "hasInstances": [
+                              "rheims-douay version",
+                              "rheims-douay bible",
+                              "authorized version",
+                              "revised version",
+                              "revised standard version",
+                              "douay version",
+                              "american revised version",
+                              "douay bible",
+                              "king james version",
+                              "king james bible",
+                              "douay-rheims version",
+                              "new english bible",
+                              "vulgate",
+                              "american standard version",
+                              "douay-rheims bible"
+                          ],
+                          "hasParts": ["text", "testament", "old testament", "new testament"],
+                          "hasTypes": ["family bible"],
+                          "typeOf": ["sacred text", "religious text", "sacred writing", "religious writing"],
+                          "examples": null,
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": [
+                              "bible",
+                              "book",
+                              "christian bible",
+                              "good book",
+                              "holy scripture",
+                              "holy writ",
+                              "scripture",
+                              "word of god"
+                          ]
+                      },
+                      {
+                          "definition": "a promise",
+                          "examples": ["he gave his word"],
+                          "typeOf": ["promise"],
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": ["parole", "word of honor"]
+                      },
+                      {
+                          "definition": "put into words or an expression",
+                          "examples": null,
+                          "hasTypes": [
+                              "redact",
+                              "dogmatize",
+                              "lexicalise",
+                              "formularize",
+                              "dogmatise",
+                              "couch",
+                              "lexicalize",
+                              "ask",
+                              "formularise",
+                              "frame",
+                              "put",
+                              "cast"
+                          ],
+                          "typeOf": ["show", "express", "evince"],
+                          "derivation": ["wording"],
+                          "partOfSpeech": "verb",
+                          "synonyms": ["articulate", "formulate", "give voice", "phrase"]
+                      },
+                      {
+                          "definition": "a brief statement",
+                          "examples": ["he didn't say a word about it"],
+                          "typeOf": ["statement"],
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": null
+                      },
+                      {
+                          "definition": "a string of bits stored in computer memory",
+                          "examples": ["large computers use words up to 64 bits long"],
+                          "hasParts": ["byte"],
+                          "partOf": ["kilobyte", "kibibyte", "kib", "k", "kb"],
+                          "typeOf": ["computer memory unit"],
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": null
+                      },
+                      {
+                          "definition": "a unit of language that native speakers can identify",
+                          "examples": [
+                              "words are the blocks from which sentences are made",
+                              "he hardly said ten words all morning"
+                          ],
+                          "hasParts": ["affix", "syllable"],
+                          "hasTypes": [
+                              "homonym",
+                              "hypernym",
+                              "hyponym",
+                              "signifier",
+                              "synonym",
+                              "antonym",
+                              "loanword",
+                              "headword",
+                              "guideword",
+                              "term"
+                          ],
+                          "typeOf": ["linguistic unit", "language unit"],
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": null
+                      },
+                      {
+                          "definition": "a verbal command for action",
+                          "examples": ["when I give the word, charge!"],
+                          "typeOf": ["order"],
+                          "derivation": null,
+                          "partOfSpeech": "noun",
+                          "synonyms": null
+                      }
+                  ]
+              }
+              """
+        
+        
+      case .w:
+        jsonString =
+        """
+      {
+      "word": "w",
+      "frequency": 4.74,
+      "pronunciation": {
+          "all": "'dʌbəl_,ju"
+      },
+      "results": [
+          {
+              "definition": "a unit of power equal to 1 joule per second; the power dissipated by a current of 1 ampere flowing across a resistance of 1 ohm",
+              "hasParts": [
+                  "milliwatt"
+              ],
+              "partOf": [
+                  "kw",
+                  "kilowatt",
+                  "hp",
+                  "h.p.",
+                  "horsepower"
+              ],
+              "partOfSpeech": "noun",
+              "synonyms": [
+                  "watt"
+              ],
+              "typeOf": [
+                  "power unit"
+              ]
+          },
+          {
+              "definition": "the 23rd letter of the Roman alphabet",
+              "memberOf": [
+                  "roman alphabet",
+                  "latin alphabet"
+              ],
+              "partOfSpeech": "noun",
+              "synonyms": [
+                  "double-u"
+              ],
+              "typeOf": [
+                  "letter",
+                  "alphabetic character",
+                  "letter of the alphabet"
+              ]
+          },
+          {
+              "definition": "the cardinal compass point that is a 270 degrees",
+              "partOfSpeech": "noun",
+              "synonyms": [
+                  "due west",
+                  "west",
+                  "westward"
+              ],
+              "typeOf": [
+                  "cardinal compass point"
+              ]
+          },
+          {
+              "definition": "a heavy grey-white metallic element; the pure form is used mainly in electrical applications; it is found in several ores including wolframite and scheelite",
+              "partOfSpeech": "noun",
+              "substanceOf": [
+                  "scheelite",
+                  "wolframite",
+                  "iron manganese tungsten"
+              ],
+              "synonyms": [
+                  "atomic number 74",
+                  "tungsten",
+                  "wolfram"
+              ],
+              "typeOf": [
+                  "metallic element",
+                  "metal"
+              ]
+          }
+      ]
+  }
+  """
+      case .wo:
+        jsonString =
+        """
+        {
+            "word": "wo",
+            "frequency": 3.56,
+            "pronunciation": "woʊ",
+            "rhymes": {
+                "all": "-oʊ"
+            }
+        }
+        """
+      case .wor:
+        jsonString =
+        """
+        {
+            "word": "wor",
+            "frequency": 3.56,
+        }
+        """
+      }
+      return jsonString.trimmingCharacters(in: .whitespacesAndNewlines).data(using: .utf8)!
+    }
+  }
+
+
+  extension MockDataManager.MockSearchManager {
+    var stub: Data {
+      var jsonString: String = ""
+      switch self {
+      case .w:
+        jsonString = """
+
+  {
+    "query": {
+      "letterPattern": "w",
+      "limit": "100",
+      "page": 1
+    },
+    "results": {
+      "total": 30179,
+      "data": [
+        "'tween",
+        "'tween decks",
+        "1st earl baldwin of bewdley",
+        "4wd",
+        "a few",
+        "a. e. w. mason",
+        "aardwolf",
+        "aaron montgomery ward",
+        "abb wool",
+        "abbott lawrence lowell",
+        "abdominal wall",
+        "aberystwyth",
+        "abide with",
+        "abies lowiana",
+        "abominable snowman",
+        "abound with",
+        "above water",
+        "above-water",
+        "above-written",
+        "abramowitz",
+        "absence without leave",
+        "absent without leave",
+        "absolute power",
+        "abul-walid mohammed ibn-ahmad ibn-mohammed ibn-roshd",
+        "abwatt",
+        "aby moritz warburg",
+        "aby warburg",
+        "academic gown",
+        "academy award",
+        "accommodate with",
+        "account with",
+        "accredit with",
+        "achomawi",
+        "acid blower",
+        "acid brown",
+        "acid wood",
+        "acid worker",
+        "acid yellow",
+        "acid-wash",
+        "acknowledge",
+        "acknowledge defeat",
+        "acknowledgeable",
+        "acknowledged",
+        "acknowledgedly",
+        "acknowledgement",
+        "acknowledger",
+        "acknowledging",
+        "acknowledgment",
+        "acme harrow",
+        "acorn weevil",
+        "acorn worm",
+        "acoustic power",
+        "acoustic wave",
+        "acquainted with",
+        "acridine yellow",
+        "act between",
+        "act well",
+        "act with",
+        "act-wait",
+        "action at law",
+        "action viewer",
+        "activewear",
+        "adamawa",
+        "adeline virginia stephen woolf",
+        "ader wax",
+        "adjustable wrench",
+        "adlai ewing stevenson",
+        "administrative law",
+        "admiral dewey",
+        "admiralty law",
+        "adolf windaus",
+        "adolphe william",
+        "adowa",
+        "adown",
+        "aduwa",
+        "advanced work",
+        "adverse witness",
+        "advertising writer",
+        "advise with",
+        "advowson",
+        "aeonium haworthii",
+        "aerial tramway",
+        "aero arrow",
+        "aerotow",
+        "aesop prawn",
+        "afore-known",
+        "african bowstring hemp",
+        "african clawed frog",
+        "african sandalwood",
+        "african walnut",
+        "african wild ass",
+        "african yellowwood",
+        "afro-wig",
+        "after which",
+        "after-written",
+        "afterbirth weed",
+        "afterglow",
+        "aftergrowth",
+        "afterward",
+        "afterwards"
+      ]
+    }
+  }
+
+  """
+      case .wo:
+        jsonString = """
+
+  {
+    "query": {
+      "letterPattern": "wo",
+      "limit": "100",
+      "page": 1
+    },
+    "results": {
+      "total": 3895,
+      "data": [
+        "aardwolf",
+        "abb wool",
+        "acid wood",
+        "acid worker",
+        "acorn worm",
+        "adeline virginia stephen woolf",
+        "advanced work",
+        "aeonium haworthii",
+        "african sandalwood",
+        "african yellowwood",
+        "afterword",
+        "afterworld",
+        "agalwood",
+        "age-worn",
+        "agilawood",
+        "ailanthus silkworm",
+        "air wood",
+        "aircraftswoman",
+        "aircraftswomen",
+        "aircraftwoman",
+        "airwoman",
+        "airwomen",
+        "airworthiness",
+        "airworthy",
+        "akeem olajuwon",
+        "alder dogwood",
+        "alexander woollcott",
+        "alfred charles william harmsworth",
+        "alfred edward woodley mason",
+        "alice-in-wonderland",
+        "all two",
+        "all-praiseworthy",
+        "all-wood",
+        "all-wool",
+        "all-working",
+        "almswoman",
+        "almswomen",
+        "aloeswood",
+        "alpine woodsia",
+        "amboina wood",
+        "american basswood",
+        "american dogwood",
+        "american smokewood",
+        "american woodcock",
+        "american wormseed",
+        "ancestor worship",
+        "andaman redwood",
+        "angiospermous yellowwood",
+        "angleworm",
+        "angora wool",
+        "animal worship",
+        "animal-worship",
+        "annelid worm",
+        "antiquated word",
+        "antiworld",
+        "applewood",
+        "apprentice work",
+        "arctic wolf",
+        "army cutworm",
+        "army worm",
+        "armyworm",
+        "arrow wood",
+        "arrow-wounded",
+        "arrowwood",
+        "arrowworm",
+        "art work",
+        "artisan work",
+        "artist's workroom",
+        "artwork",
+        "as luck would have it",
+        "asarum shuttleworthii",
+        "asbestos wood",
+        "ash wood",
+        "assemblywoman",
+        "assessment work",
+        "at the worst",
+        "at work",
+        "at worst",
+        "australian sword lily",
+        "awlwort",
+        "awoke",
+        "awoken",
+        "awol",
+        "awolowo",
+        "axle worker",
+        "backbreaking work",
+        "backsword",
+        "backswordman",
+        "backswordsman",
+        "backwood",
+        "backwoods",
+        "backwoodsman",
+        "bad woman",
+        "bafemi awolowo",
+        "bag work",
+        "bag worker",
+        "bagwoman",
+        "bagwomen",
+        "bagwork",
+        "bagworm"
+      ]
+    }
+  }
+
+  """
+      case .wor:
+        jsonString = """
+
+  {
+    "query": {
+      "letterPattern": "wor",
+      "limit": "100",
+      "page": 1
+    },
+    "results": {
+      "total": 1917,
+      "data": [
+        "acid worker",
+        "acorn worm",
+        "advanced work",
+        "aeonium haworthii",
+        "afterword",
+        "afterworld",
+        "age-worn",
+        "ailanthus silkworm",
+        "airworthiness",
+        "airworthy",
+        "alfred charles william harmsworth",
+        "all-praiseworthy",
+        "all-working",
+        "american wormseed",
+        "ancestor worship",
+        "angleworm",
+        "animal worship",
+        "animal-worship",
+        "annelid worm",
+        "antiquated word",
+        "antiworld",
+        "apprentice work",
+        "army cutworm",
+        "army worm",
+        "armyworm",
+        "arrowworm",
+        "art work",
+        "artisan work",
+        "artist's workroom",
+        "artwork",
+        "asarum shuttleworthii",
+        "assessment work",
+        "at the worst",
+        "at work",
+        "at worst",
+        "australian sword lily",
+        "awlwort",
+        "axle worker",
+        "backbreaking work",
+        "backsword",
+        "backswordman",
+        "backswordsman",
+        "bag work",
+        "bag worker",
+        "bagwork",
+        "bagworm",
+        "bantam work",
+        "barbara hepworth",
+        "bare-worn",
+        "bargain work",
+        "baroness jackson of lodsworth",
+        "barrenwort",
+        "basketwork",
+        "bastard wormwood",
+        "battle word",
+        "beach wormwood",
+        "beadwork",
+        "bean cutworm",
+        "beard worm",
+        "bearer of the sword",
+        "bearing sword",
+        "beaten work",
+        "bedworth",
+        "beet armyworm",
+        "bellwort",
+        "berlin work",
+        "better world",
+        "bible-worship",
+        "big word",
+        "billet worker",
+        "birthwort",
+        "birthwort family",
+        "bitterwort",
+        "black saltwort",
+        "black spleenwort",
+        "black-stem spleenwort",
+        "black-stemmed spleenwort",
+        "bladder worm",
+        "bladderwort",
+        "bladderwort family",
+        "blameworthiness",
+        "blameworthy",
+        "blend-word",
+        "blindworm",
+        "bloodworm",
+        "bloodwort",
+        "bloodwort family",
+        "board work",
+        "board worker",
+        "body of work",
+        "bodywork",
+        "bollworm",
+        "book-work",
+        "bookwork",
+        "bookworm",
+        "boon work",
+        "border world",
+        "bosworth field",
+        "boulework",
+        "bradley's spleenwort"
+      ]
+    }
+  }
+
+  """
+      case .word:
+        jsonString = """
+
+  {
+    "query": {
+      "letterPattern": "word",
+      "limit": "100",
+      "page": 1
+    },
+    "results": {
+      "total": 292,
+      "data": [
+        "afterword",
+        "antiquated word",
+        "australian sword lily",
+        "backsword",
+        "backswordman",
+        "backswordsman",
+        "battle word",
+        "bearer of the sword",
+        "bearing sword",
+        "big word",
+        "blend-word",
+        "bring word",
+        "broadsword",
+        "brunch-word",
+        "bug word",
+        "bunch-word",
+        "buzz word",
+        "buzzword",
+        "by word of mouth",
+        "byword",
+        "catchword",
+        "catchword entry",
+        "cavalry sword",
+        "choice of words",
+        "clipped word",
+        "cloak-and-sword",
+        "closed-class word",
+        "cognate word",
+        "content word",
+        "counter word",
+        "counterword",
+        "crossword",
+        "crossword puzzle",
+        "cue word",
+        "curse word",
+        "cuss word",
+        "cussword",
+        "deictic word",
+        "dirty word",
+        "echoic word",
+        "empty word",
+        "empty words",
+        "entry word",
+        "equivalent word",
+        "fad word",
+        "fencing sword",
+        "foreword",
+        "form word",
+        "fossil word",
+        "four-letter anglo-saxon word",
+        "four-letter word",
+        "full word",
+        "function word",
+        "get word",
+        "ghost word",
+        "give word",
+        "good sword",
+        "good word",
+        "guide word",
+        "guideword",
+        "half-sword",
+        "hard word",
+        "have words",
+        "head word",
+        "heading sword",
+        "headword",
+        "honeyed words",
+        "household word",
+        "hybrid word",
+        "idle words",
+        "in other words",
+        "interword",
+        "jargon word",
+        "key word",
+        "keyword",
+        "last word",
+        "leave word",
+        "loan word",
+        "loanword",
+        "long word",
+        "machine word",
+        "main entry word",
+        "marlin swordfish",
+        "mass-word",
+        "misword",
+        "monosyllabic word",
+        "naughty word",
+        "new word",
+        "nine-word",
+        "ninety-word",
+        "nonce word",
+        "one-word",
+        "open-class word",
+        "opposite word",
+        "outword",
+        "overword",
+        "passing word",
+        "password",
+        "polysemantic word",
+        "polysemous word"
+      ]
+    }
+  }
+
+  """
+      }
+      return jsonString.trimmingCharacters(in: .whitespacesAndNewlines).data(using: .utf8)!
+    }
+  }
+
