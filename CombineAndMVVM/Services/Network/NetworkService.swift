@@ -38,7 +38,7 @@ extension NetworkResponseHandler{
   func handleResponse(_ output: URLSession.DataTaskPublisher.Output) throws -> Data {
     guard let urlResponse = output.response as? HTTPURLResponse, 200...299 ~= urlResponse.statusCode else {
       print("Invalid Response")
-      throw DatafetchError.invalidResponse
+      throw NetworkError.invalidResponse
     }
     return output.data
   }
