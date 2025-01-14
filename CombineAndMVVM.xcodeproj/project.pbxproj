@@ -127,13 +127,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		100070202CD4EC1800E410CA /* Manager */ = {
+		100070202CD4EC1800E410CA /* Theme */ = {
 			isa = PBXGroup;
 			children = (
 				10BB136E2CF4F2A600C6D1F4 /* ThemeManager.swift */,
-				10A97E502D0C16550007D8A5 /* SearchManager.swift */,
 			);
-			path = Manager;
+			path = Theme;
 			sourceTree = "<group>";
 		};
 		107080512C2C26340069C139 = {
@@ -157,7 +156,6 @@
 			isa = PBXGroup;
 			children = (
 				107E9B152D34DF2D008DC87D /* Services */,
-				100070202CD4EC1800E410CA /* Manager */,
 				107080742C2C29C40069C139 /* ViewModel */,
 				107080732C2C29BA0069C139 /* View */,
 				107080A62C4F9C190069C139 /* Controller */,
@@ -240,6 +238,8 @@
 		107E9B152D34DF2D008DC87D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				100070202CD4EC1800E410CA /* Theme */,
+				10A21C182D36C57300E3EA51 /* Search */,
 				10A21C132D365C4000E3EA51 /* Bookmark */,
 				10A21C102D36551400E3EA51 /* CoreData */,
 				107E9B1C2D36345C008DC87D /* WordData */,
@@ -303,6 +303,14 @@
 				10A21C142D36BEEB00E3EA51 /* BookmarkService.swift */,
 			);
 			path = Bookmark;
+			sourceTree = "<group>";
+		};
+		10A21C182D36C57300E3EA51 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				10A97E502D0C16550007D8A5 /* SearchManager.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		10BB4F4C2D2A5B3A00D0D87E /* Protocol */ = {

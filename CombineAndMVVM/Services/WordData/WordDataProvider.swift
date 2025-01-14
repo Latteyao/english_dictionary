@@ -16,6 +16,8 @@ class WordDataProvider: WordDataService, WordDataFetcher {
   /// 網路服務，負責 API 請求
   private let networkService: NetworkService
   
+  private let wordApiManager:WordApiManager
+  
   /// 本地單字讀取服務
   private let localWordService: LocalWordService
   
@@ -24,9 +26,10 @@ class WordDataProvider: WordDataService, WordDataFetcher {
   
   // MARK: - Initializer
   
-  init(networkService: NetworkService, localWordService: LocalWordService) {
+  init(networkService: NetworkService, localWordService: LocalWordService, wordApiManager:WordApiManager) {
     self.networkService = networkService
     self.localWordService = localWordService
+    self.wordApiManager = wordApiManager
     loadPopularWords() // 初始化時載入本地熱門單字
   }
 }
@@ -38,7 +41,8 @@ extension WordDataProvider {
   /// - Parameter endpoint: API 路徑
   /// - Returns: 傳回「單字資料」或「網路錯誤」的 Publisher
   func fetchWord(endpoint: Endpoint.RequestPath) -> AnyPublisher<WordData, NetworkError> {
-    networkService.fetchData(endpoint)
+    wordApiManager.fetchData(endpoint)
+//    networkService.fetchData(endpoint)
   }
   
   /// 對傳入的多個單字進行並行網路請求，允許部份失敗
@@ -47,7 +51,7 @@ extension WordDataProvider {
   func fetchPopularWords(at array: [String]) -> AnyPublisher<[PopularWordResult], Never> {
     // 將每個單字轉成各自的 Publisher，並在失敗時將錯誤包裝進 `PopularWordResult` 的 errorDescription
     let publishers = array.map { word in
-      self.networkService
+      self.wordApiManager
         .fetchData(Endpoint.RequestPath.general(for: word))
         .map { wordData in
           // 成功時: 帶回 wordData

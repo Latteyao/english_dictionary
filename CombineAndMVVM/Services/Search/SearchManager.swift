@@ -9,14 +9,22 @@ import Combine
 import Foundation
 import UIKit
 
-class SearchManager: WordApiManager {
+class SearchManager {
   // MARK: - Singleton
 
-  static let shared = SearchManager()
+//  static let shared = SearchManager()
+  
+  private let wordApiManager:WordApiManager
   
   // MARK: - Properties
   
   private var cancellables = Set<AnyCancellable>()
+  
+  init(wordApiManager: WordApiManager, cancellables: Set<AnyCancellable> = Set<AnyCancellable>()) {
+    self.wordApiManager = wordApiManager
+    self.cancellables = cancellables
+  }
+  
 }
 
 // MARK: - Search Methods
@@ -25,9 +33,9 @@ extension SearchManager {
     /// - Parameters:
     ///   - query: 搜尋字串
     ///   - completion: 回呼結果，包含成功或失敗狀態
-  func performSearch(with query: String, completion: @escaping (Result<ResponseModel, DatafetchError>) -> Void) {
-    let endpoint = Endpoint.search(for: query)
-    fetchData(endpoint: endpoint)
+  func performSearch(with query: String, completion: @escaping (Result<ResponseModel, NetworkError>) -> Void) {
+    let endpoint = Endpoint.RequestPath.search(for: query)
+    wordApiManager.fetchData(endpoint)
       .handleEvents()
       .sink { completionResult in
         switch completionResult {
@@ -50,6 +58,6 @@ extension SearchManager {
   /// 搜尋結果的狀態
   enum SearchResultsState {
     case success(ResponseModel)
-    case failure(DatafetchError)
+    case failure(NetworkError)
   }
 }
