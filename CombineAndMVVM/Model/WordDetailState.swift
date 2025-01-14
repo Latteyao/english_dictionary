@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct WordDetailState {
+    var data: WordData
+    var error: String?  // 遇到錯誤時可以放錯誤訊息
+}

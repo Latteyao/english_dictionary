@@ -72,7 +72,7 @@ extension WordDataProvider {
 extension WordDataProvider {
   /// 從本地檔案載入熱門單字
   
-  private func loadPopularWords() {
+   func loadPopularWords() {
     popularWords = localWordService.loadPopularWords(from: "words_dictionary")
   }
 }

@@ -84,7 +84,7 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    isBookmarked = bookmarkViewModel.check(title: dataViewModel?.viewData.word ?? "")
+    isBookmarked = bookmarkViewModel.isBookmarkExist(title: dataViewModel?.detailState.data.word ?? ""/*viewData.word ?? ""*/)
     configureUI()
 //    setupLabelTextColor()
     configureConstraints() // 設定位置
@@ -209,7 +209,7 @@ extension WordDetailViewController {
   
   @objc func speakButtonPressed() {
     guard let dataViewModel = dataViewModel else { return }
-    guard let word = dataViewModel.viewData.word else { return }
+    guard let word = dataViewModel.detailState.data.word else { return }
     let speechSynthesizer = AVSpeechSynthesizer()
     let speechUtterance = AVSpeechUtterance(string: word)
     speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")
@@ -218,9 +218,9 @@ extension WordDetailViewController {
   
   @objc func bookmarkButtonPressed() {
     guard let dataViewModel = dataViewModel else { return }
-    guard let word = dataViewModel.viewData.word else { return }
+    guard let word = dataViewModel.detailState.data.word else { return }
     if isBookmarked {
-      bookmarkViewModel.addBookmark(title: word, wordData: dataViewModel.viewData)
+      bookmarkViewModel.addBookmark(title: word, data: dataViewModel.detailState.data)
     } else {
       bookmarkViewModel.deleteBookmark(title: word)
     }

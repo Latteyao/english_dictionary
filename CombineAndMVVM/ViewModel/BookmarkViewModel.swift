@@ -12,15 +12,18 @@ class BookmarkViewModel: ObservableObject {
   // MARK: - Properties
   
   @Published var bookmarks: [Bookmark] = []
-  private let bookmarkManager = BookmarkManager.shared
+  
+  private let bookmarkManager: BookmarkService
+  
   
   // MARK: - Initializer
-  
-  init() {
+  init (bookmarkManager: BookmarkManager) {
+    self.bookmarkManager = bookmarkManager
     DispatchQueue.main.async {
       self.fetchBookmarks()
     }
   }
+
 }
 
 // MARK: - Methods
@@ -34,9 +37,9 @@ extension BookmarkViewModel {
     }
   }
 
-  func addBookmark(title: String, wordData: WordData) {
+  func addBookmark(title: String,data wordData: WordData) {
     let encodedData = Data.encode(wordData) ?? Data()
-    bookmarkManager.save(title: title, data: encodedData)
+    bookmarkManager.saveBookmark(title: title, data: encodedData)
     fetchBookmarks() // 更新 UI
   }
 
@@ -45,7 +48,7 @@ extension BookmarkViewModel {
     fetchBookmarks() // 更新 UI
   }
 
-  func check(title: String) -> Bool {
+  func isBookmarkExist(title: String) -> Bool {
     return bookmarkManager.isBookmarkDuplicate(title)
   }
 }
