@@ -12,13 +12,16 @@ import Foundation
 class WordApiManager {
   // MARK: - Properties
 
-  private let isMockEnabled: Bool = true
+  private let isMockEnabled: Bool
+  
   private let mockDataManager: MockDataService
+  
   private let networkManager: NetworkService
   
-  init(mockDataManager: MockDataService, networkManager:NetworkService) {
+  init(mockDataManager: MockDataService, networkManager:NetworkService, isMockEnabled: Bool = false) {
     self.mockDataManager = mockDataManager
     self.networkManager = networkManager
+    self.isMockEnabled = isMockEnabled
   }
   
   func fetchData<T: Codable>(_ endpoint:Endpoint.RequestPath) -> AnyPublisher<T,NetworkError>{
@@ -41,11 +44,5 @@ enum NetworkError: Error {
   case unknown
 }
 
-enum DatafetchError: Error {
-  case invalidResponse
-  case invalidData
-  case networkError
-  case unknownError
-}
 
 

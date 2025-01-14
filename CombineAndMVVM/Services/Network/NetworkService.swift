@@ -12,8 +12,6 @@ protocol NetworkService {
   func fetchData<T: Codable>(_ endpoint: Endpoint.RequestPath) -> AnyPublisher<T, NetworkError>
 }
 
-
-
 protocol NetworkErrorHandler: NetworkService {
   func handleNetworkError(_ error: Error) -> NetworkError
 }
