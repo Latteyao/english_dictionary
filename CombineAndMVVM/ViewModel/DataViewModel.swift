@@ -15,18 +15,15 @@ class DataViewModel: ObservableObject {
   @Published var randomData: [PopularWordResult] = []
 
   @Published var detailState = WordDetailState(data: .empty, error: nil)
-
-  private let wordDataFetcher: WordDataFetcher
-
-  private let wordDataService: WordDataService
+  
+  private let wordDataProvider: WordDataProvider
 
   private var cancellables: Set<AnyCancellable> = []
   
   // MARK: - Initializer
   
-  init(wordDataFetcher: WordDataFetcher, wordDataService: WordDataService) {
-    self.wordDataFetcher = wordDataFetcher
-    self.wordDataService = wordDataService
+  init(wordDataProvider: WordDataProvider = WordDataProvider()) {
+    self.wordDataProvider = wordDataProvider
   }
 }
 
@@ -38,16 +35,16 @@ extension DataViewModel {
     resetState()
 
     // 2. 讓 WordDataProvider 重新載入 / 洗牌 popularWords
-    if let provider = wordDataService as? WordDataProvider {
-      provider.loadPopularWords()
-    }
+
+      wordDataProvider.loadPopularWords()
+
 
     // 3. 用最新的 popularWords 進行抓取
     fetchPopularWords()
   }
 
   func fetchPopularWords() {
-    wordDataFetcher.fetchPopularWords(at: wordDataService.popularWords)
+    wordDataProvider.fetchPopularWords(at: wordDataProvider.popularWords)
       .receive(on: DispatchQueue.main)
       .sink { [weak self] popularWordResults in
         // popularWordResults 是 [PopularWordResult]
@@ -65,7 +62,7 @@ extension DataViewModel {
   }
 
   func fetchSingleWord(_ word: String) {
-    wordDataFetcher.fetchWord(endpoint: .general(for: word))
+    wordDataProvider.fetchWord(endpoint: .general(for: word))
       .receive(on: DispatchQueue.main)
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {

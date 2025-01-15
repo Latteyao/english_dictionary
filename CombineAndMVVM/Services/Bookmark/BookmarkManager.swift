@@ -16,7 +16,7 @@ class BookmarkManager: BookmarkService {
   // MARK: - Initializer
 
   // 用建構子（init）注入 context
-  init(coreDataRepository: CoreDataContextService) {
+  init(coreDataRepository: CoreDataContextService = CoreDataRepository()) {
     self.coreDataRepository = coreDataRepository
   }
 }

@@ -20,7 +20,8 @@ class SearchManager {
   
   private var cancellables = Set<AnyCancellable>()
   
-  init(wordApiManager: WordApiManager, cancellables: Set<AnyCancellable> = Set<AnyCancellable>()) {
+  init(wordApiManager: WordApiManager = WordApiManager(),
+       cancellables: Set<AnyCancellable> = Set<AnyCancellable>()) {
     self.wordApiManager = wordApiManager
     self.cancellables = cancellables
   }

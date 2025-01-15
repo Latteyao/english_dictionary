@@ -14,7 +14,6 @@ class WordDataProvider: WordDataService, WordDataFetcher {
   // MARK: - Singleton
   
   /// 網路服務，負責 API 請求
-  private let networkService: NetworkService
   
   private let wordApiManager:WordApiManager
   
@@ -26,8 +25,8 @@ class WordDataProvider: WordDataService, WordDataFetcher {
   
   // MARK: - Initializer
   
-  init(networkService: NetworkService, localWordService: LocalWordService, wordApiManager:WordApiManager) {
-    self.networkService = networkService
+  init(localWordService: LocalWordService = DefaultLocalWordService(),
+       wordApiManager:WordApiManager = WordApiManager()) {
     self.localWordService = localWordService
     self.wordApiManager = wordApiManager
     loadPopularWords() // 初始化時載入本地熱門單字

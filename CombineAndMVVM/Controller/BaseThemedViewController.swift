@@ -18,16 +18,20 @@ class BaseThemedViewController: UIViewController {
   
   // MARK: - Initializer
 
-  init(themeViewModel: ThemeViewModel) {
+  init(themeViewModel: ThemeViewModel = ThemeViewModel()) {
     self.themeViewModel = themeViewModel
     super.init(nibName: nil, bundle: nil)
   }
   
   required init?(coder: NSCoder) {
-          // 使用預設的 ThemeViewModel 進行初始化，或者您可以選擇傳入其他 ThemeViewModel
-          self.themeViewModel = ThemeViewModel(themeManager: .shared)
-          super.init(coder: coder)
-      }
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+//  required init?(coder: NSCoder) {
+//          // 使用預設的 ThemeViewModel 進行初始化，或者您可以選擇傳入其他 ThemeViewModel
+//          self.themeViewModel = ThemeViewModel(themeManager: .shared)
+//          super.init(coder: coder)
+//      }
   
   // MARK: - View Lifecycle
 
@@ -64,7 +68,8 @@ extension BaseThemedViewController {
     super.traitCollectionDidChange(previousTraitCollection) // FIX - 這是Ios 17 以前的寫法
     // 檢查顏色外觀是否正確
     if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-      setupThemeBinding()
+//      setupThemeBinding()
+      return
     }
   }
   

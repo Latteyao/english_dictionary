@@ -13,7 +13,7 @@ class BookmarkCellView: UITableViewCell {
   
   let wordLabel: UILabel = {
     let label = UILabel()
-    label.textColor = ThemeManager.shared.currentTextColor
+//    label.textColor = ThemeManager.shared.currentTextColor // Fix 需要修改
     label.text = "word"
     label.font = .systemFont(ofSize: 20)
     label.numberOfLines = 1 

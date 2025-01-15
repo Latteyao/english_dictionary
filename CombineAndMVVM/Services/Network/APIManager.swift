@@ -18,7 +18,9 @@ class WordApiManager {
   
   private let networkManager: NetworkService
   
-  init(mockDataManager: MockDataService, networkManager:NetworkService, isMockEnabled: Bool = false) {
+  init(mockDataManager: MockDataService = MockDataManager(),
+       networkManager:NetworkService = NetworkManager(),
+       isMockEnabled: Bool = false) {
     self.mockDataManager = mockDataManager
     self.networkManager = networkManager
     self.isMockEnabled = isMockEnabled
@@ -29,6 +31,7 @@ class WordApiManager {
       return mockDataManager.fetchMockData(endpoint)
     }
     return networkManager.fetchData(endpoint)
+
   }
 
 }

@@ -12,7 +12,8 @@ import UIKit
 class ThemeManager {
   // MARK: - Singleton
 
-  static let shared = ThemeManager()
+//  static let shared = ThemeManager()
+   init() {}
 
   // MARK: - Properties
 

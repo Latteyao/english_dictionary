@@ -12,13 +12,23 @@ import UIKit
 class BookmarkViewController: BaseThemedViewController {
   // MARK: - Properties
   
-  var dataViewModel: DataViewModel = .init()
+  var dataViewModel: DataViewModel
   
-  var bookmarkViewModel: BookmarkViewModel = .init()
+  var bookmarkViewModel: BookmarkViewModel
   
   private var cancellables = Set<AnyCancellable>()
   
   var tableView: UITableView!
+  
+  init(viewModel: DataViewModel, bookmarkViewModel: BookmarkViewModel){
+    self.dataViewModel = viewModel
+    self.bookmarkViewModel = bookmarkViewModel
+    super.init()
+  }
+  
+  @MainActor required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
   
   // MARK: - View Lifecycle
   
@@ -90,7 +100,8 @@ extension BookmarkViewController: UITableViewDataSource, UITableViewDelegate {
     // FIX : 這裡的資料要設定好 可以參考ViewController 的 didTapWordButton func 的寫法
     let data = bookmarkViewModel.bookmarks[indexPath.row].data
     if let data = data?.decode(WordData.self) {
-      dataViewModel.viewData = data
+      dataViewModel.detailState.data = data
+//      dataViewModel.viewData = data
       let wordDetailViewController = WordDetailViewController(viewModel: dataViewModel)
       wordDetailViewController.navigationItem.largeTitleDisplayMode = .never
       // 按下去動畫

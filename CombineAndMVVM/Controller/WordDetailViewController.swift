@@ -67,7 +67,8 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
 
   init(viewModel: DataViewModel) {
     self.dataViewModel = viewModel
-    super.init(themeViewModel: .init(themeManager: .shared))
+    super.init()
+//    super.init(themeViewModel: .init(themeManager: .shared))
     
   }
   
@@ -180,23 +181,33 @@ extension WordDetailViewController {
   }
  
   private func bindViewData() {
-    dataViewModel?.$viewData
+    
+    dataViewModel?.$detailState
       .receive(on: DispatchQueue.main)
       .sink(receiveValue: { [weak self] viewData in
-        guard let self = self else { return }
-        self.updateUI(with: viewData)
+        self?.updateUI(with: viewData.data)
+        self?.showError(viewData.error)
       })
       .store(in: &cancellables)
+    
+    
+//    dataViewModel?.$viewData
+//      .receive(on: DispatchQueue.main)
+//      .sink(receiveValue: { [weak self] viewData in
+//        guard let self = self else { return }
+//        self.updateUI(with: viewData)
+//      })
+//      .store(in: &cancellables)
   }
   
   private func bindErrorState() {
-    dataViewModel?.$errorState
-      .receive(on: DispatchQueue.main)
-      .sink(receiveValue: { [weak self] error in
-        guard let self = self, let error = error , error != "" else { return }
-        self.showError(error.description)
-      })
-      .store(in: &cancellables)
+//    dataViewModel?.$errorState
+//      .receive(on: DispatchQueue.main)
+//      .sink(receiveValue: { [weak self] error in
+//        guard let self = self, let error = error , error != "" else { return }
+//        self.showError(error.description)
+//      })
+//      .store(in: &cancellables)
   }
 }
 

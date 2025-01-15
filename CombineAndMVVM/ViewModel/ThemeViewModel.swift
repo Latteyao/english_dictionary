@@ -15,9 +15,12 @@ class ThemeViewModel {
   
   @Published private(set) var currentTextColor: UIColor
   
+  private var themeManager: ThemeManager
+  
   private var cancellables = Set<AnyCancellable>()
   
-  init(themeManager: ThemeManager = .shared) {
+  init(themeManager: ThemeManager = ThemeManager()) {
+    self.themeManager = themeManager
     self.currentBackgroundColor = themeManager.currentBackgroundColor
     self.currentTextColor = themeManager.currentTextColor
     
@@ -36,7 +39,7 @@ class ThemeViewModel {
 extension ThemeViewModel{
   
   private func updateThemeColors() {
-    currentBackgroundColor = ThemeManager.shared.currentBackgroundColor
-    currentTextColor = ThemeManager.shared.currentTextColor
+    currentBackgroundColor = themeManager.currentBackgroundColor
+    currentTextColor = themeManager.currentTextColor
   }
 }

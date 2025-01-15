@@ -10,16 +10,19 @@ import UIKit
 
 class TabBarController: UITabBarController, UITabBarControllerDelegate {
   // MARK: - Properties
-  private let themeViewModel = ThemeViewModel(themeManager: .shared)
+//  private let themeViewModel = ThemeViewModel()
  
+  private let dataViewModel = DataViewModel()
+  
+  private let bookmarkViewModel = BookmarkViewModel()
   
   // MARK: - View Lifecycle
   
   override func viewDidLoad() { // fix - Most add new view
     super.viewDidLoad()
     setupTabBarUI()
-    let homeVC = ViewController(themeViewModel: themeViewModel)
-    let bookmarkVC = BookmarkViewController(themeViewModel: themeViewModel)
+    let homeVC = ViewController(viewModel: dataViewModel)
+    let bookmarkVC = BookmarkViewController(viewModel: dataViewModel, bookmarkViewModel: bookmarkViewModel)
     let firstNavigationController = UINavigationController(rootViewController: homeVC)
     let bookmarkNavigationController = UINavigationController(rootViewController: bookmarkVC)
     

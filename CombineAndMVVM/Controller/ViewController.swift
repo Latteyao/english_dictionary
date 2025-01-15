@@ -8,24 +8,37 @@
 import UIKit
 
 class ViewController: BaseThemedViewController {
- 
-  
   // MARK: - Properties
 
   // FIX - 必須加入 Loading 的畫面 不然會提早點入會沒有資料
-  private var dataViewModel: DataViewModel = .init()
-  
-  var searchController: UISearchController!
+  private var dataViewModel: DataViewModel
+
+  private var searchController: UISearchController!
 
   var randomWordsCollectionView: RandomWordsCollectionView!
 
   var headerView: HeaderView!
 
+  init(viewModel: DataViewModel) {
+    
+    self.dataViewModel = viewModel
+    super.init()
+  }
+  
+   required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
+//  @available(*, unavailable)
+//  @MainActor required init?(coder: NSCoder) {
+//    fatalError("init(coder:) has not been implemented")
+//  }
+
   // MARK: - View Lifecycle
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    setViewModelCall() // 呼叫 ViewModel 隨機熱門單字
+//    setViewModelCall() // 呼叫 ViewModel 隨機熱門單字
     viewModelCall() // 優先獲取所有熱門單字資料 ( 呼叫 ＡＰＩ 一次抓取 )
     configureUI() // 所有 View
     setupView()
@@ -36,13 +49,13 @@ class ViewController: BaseThemedViewController {
 // MARK: - ViewModel Interaction
 
 extension ViewController {
-  private func setViewModelCall() {
-    dataViewModel.rollDice()
-  }
+//  private func setViewModelCall() {
+//    dataViewModel.rollDice()
+//  }
 
   private func viewModelCall() {
 //    Task { await dataViewModel.fetchAllpopularWords() }
-    dataViewModel.fetchAllpopularWords()
+    dataViewModel.fetchPopularWords()
   }
 }
 
@@ -65,24 +78,22 @@ extension ViewController: UISearchControllerDelegate, UISearchResultsUpdating, U
 // MARK: - UI Configuration
 
 extension ViewController {
-  
   private func configureUI() {
     configureHeaderView() // 設置抬頭 View
     configureSearchController() // 設置搜尋 Controller
     configureRandomWordsCollectionView() // 設置隨機單字的 CollectionView
   }
-  
-  private func setupView(){
+
+  private func setupView() {
     view.addSubview(headerView)
     view.addSubview(searchController.searchBar)
     view.addSubview(randomWordsCollectionView)
   }
-  
+
   /// Header UI Setting
   private func configureHeaderView() {
     headerView = HeaderView(frame: .zero)
     headerView.translatesAutoresizingMaskIntoConstraints = false
-    
   }
 
   /// Seach Controller
@@ -97,18 +108,17 @@ extension ViewController {
     searchController.searchBar.searchTextField.backgroundColor = .white
     navigationItem.searchController = searchController
     navigationItem.hidesSearchBarWhenScrolling = false
-    
   }
 
   /// 設置隨機顯示Word的CollectionView
   private func configureRandomWordsCollectionView() {
     /// 設定RandomWordsCollectionView的frame
-    randomWordsCollectionView = RandomWordsCollectionView()
+    randomWordsCollectionView = RandomWordsCollectionView(viewModel: dataViewModel)
     /// delegate
     randomWordsCollectionView.translatesAutoresizingMaskIntoConstraints = false
     randomWordsCollectionView.delegate = self
     randomWordsCollectionView.viewModel = dataViewModel
-   
+
     /// Constraints
   }
 
@@ -148,8 +158,12 @@ extension ViewController {
 extension ViewController: WordCollectionViewCellDelegate {
   /// 按下按鈕事件觸發後頁面轉Detail View
   func didTapWordButton(with word: String, in index: Int) {
-    dataViewModel.newViewData(fallbackWord: word, form: dataViewModel.randomData[index])
-    dataViewModel.errorState = dataViewModel.popularWordsErrorState[index]
+    dataViewModel.detailState.data = dataViewModel.randomData[index].wordData ?? .empty
+    dataViewModel.detailState.error = dataViewModel.randomData[index].errorDescription
+    dataViewModel.detailState.data.word = dataViewModel.randomData[index].word
+
+//    dataViewModel.newViewData(fallbackWord: word, form: dataViewModel.randomData[index])
+//    dataViewModel.errorState = dataViewModel.popularWordsErrorState[index]
     let wordDetailViewController = WordDetailViewController(viewModel: dataViewModel)
 //    let transition = CATransition()
 //    transition.type = .push  // 可以選擇其他效果：.push, .reveal 等
@@ -157,7 +171,6 @@ extension ViewController: WordCollectionViewCellDelegate {
 //            transition.duration = 0.3  // 動畫持續時間
 //    transition.timingFunction = CAMediaTimingFunction(name: .easeOut)
 //    navigationController?.view.layer.add(transition, forKey: kCATransition)
-            
 
     /// 轉換下一個畫面
     print("navigation push to \(wordDetailViewController)")

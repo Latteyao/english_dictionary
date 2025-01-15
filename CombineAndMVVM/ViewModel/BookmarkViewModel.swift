@@ -17,7 +17,7 @@ class BookmarkViewModel: ObservableObject {
   
   
   // MARK: - Initializer
-  init (bookmarkManager: BookmarkManager) {
+  init (bookmarkManager: BookmarkManager = BookmarkManager()) {
     self.bookmarkManager = bookmarkManager
     DispatchQueue.main.async {
       self.fetchBookmarks()

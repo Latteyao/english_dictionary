@@ -13,9 +13,9 @@ class RandomWordsCollectionView: UIView {
   
   // MARK: - Properties
   
-  var coreData = CoreDataManager.shared
+//  var coreData = CoreDataManager.shared
   
-  var viewModel: DataViewModel!
+  var viewModel: DataViewModel
   
   var collectionView: UICollectionView!
   var words: [String] = []
@@ -52,13 +52,21 @@ class RandomWordsCollectionView: UIView {
   
   // MARK: - Initializer
   
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    
-    setupCollectionView()
-    randomButtonAction()
-//    testdata()
+  init(viewModel:DataViewModel){
+    self.viewModel = DataViewModel()
+    super.init(frame: .zero)
+    self.setupCollectionView()
+    self.randomButtonAction()
   }
+
+  
+//  override init(frame: CGRect) {
+//    super.init(frame: frame)
+//    self.viewModel = DataViewModel()
+//    setupCollectionView()
+//    randomButtonAction()
+////    testdata()
+//  }
   
   @available(*, unavailable)
   required init?(coder: NSCoder) {
@@ -110,9 +118,10 @@ extension RandomWordsCollectionView {
   }
   
   @objc func reroll() {
-    viewModel.rollDice() //呼叫 viewModel 擲骰子
+    viewModel.reloadPopularWords()
+//    viewModel.rollDice() //呼叫 viewModel 擲骰子
 //    Task { await viewModel.fetchAllpopularWords() } // fetch api Data to randomData
-    viewModel.fetchAllpopularWords()
+//    viewModel.fetchAllpopularWords()
     collectionView.reloadData()
 //    coreData.clearEntityData(entityName: "Bookmark") // FIX: - 目前是重置 core data entity Bookmark 按鈕
   }
@@ -122,12 +131,14 @@ extension RandomWordsCollectionView {
 
 extension RandomWordsCollectionView: UICollectionViewDataSource, UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return viewModel.popularWords.count
+//    return viewModel.popularWords.count
+    return viewModel.randomData.count
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell
-    let word = viewModel.popularWords[indexPath.item]
+    let word = viewModel.randomData[indexPath.item].word
+//    let word = viewModel.popularWords[indexPath.item]
 //    let word = viewController.viewModel.popularWords[indexPath.item]
     // popularWordsErrorState[indexPath.item]
     cell.configure(with: word, in: indexPath.item)

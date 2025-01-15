@@ -10,12 +10,14 @@ import UIKit
 
 
 protocol ErrorDisplayable {
-  func showError(_ message: String)
+  func showError(_ message: String?)
 }
 
 extension ErrorDisplayable where Self: UIViewController {
-  func showError(_ message: String) {
-    let errorView = ErrorDisplayView(message: message)
-    errorView.show(in: self.view)
+  func showError(_ message: String?) {
+    if let message = message {
+      let errorView = ErrorDisplayView(message: message)
+      errorView.show(in: self.view)
+    }
   }
 }
