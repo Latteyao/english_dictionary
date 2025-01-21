@@ -13,12 +13,7 @@ class RandomWordsCollectionView: UIView {
   
   // MARK: - Properties
   
-//  var coreData = CoreDataManager.shared
-  
-  var viewModel: DataViewModel
-  
   var collectionView: UICollectionView!
-  var words: [String] = []
   
   weak var delegate: WordCollectionViewCellDelegate?
   
@@ -52,23 +47,19 @@ class RandomWordsCollectionView: UIView {
   
   // MARK: - Initializer
   
-  init(viewModel:DataViewModel){
-    self.viewModel = DataViewModel()
+  override init(frame: CGRect) {
     super.init(frame: .zero)
-    self.setupCollectionView()
-    self.randomButtonAction()
+    setupCollectionView()
+    randomButtonAction()
   }
-
-  
-//  override init(frame: CGRect) {
-//    super.init(frame: frame)
-//    self.viewModel = DataViewModel()
+//  
+//  init(){
+//    super.init(frame: .zero)
 //    setupCollectionView()
 //    randomButtonAction()
-////    testdata()
+//    
 //  }
   
-  @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -84,8 +75,6 @@ extension RandomWordsCollectionView {
   
     collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.backgroundColor = .systemGray
-    collectionView.dataSource = self
-    collectionView.delegate = self
     collectionView.layer.cornerRadius = 15
     collectionView.register(WordCollectionViewCell.self, forCellWithReuseIdentifier: "WordCell")
     backgroundColor = .gray
@@ -118,10 +107,8 @@ extension RandomWordsCollectionView {
   }
   
   @objc func reroll() {
-    viewModel.reloadPopularWords()
-//    viewModel.rollDice() //呼叫 viewModel 擲骰子
-//    Task { await viewModel.fetchAllpopularWords() } // fetch api Data to randomData
-//    viewModel.fetchAllpopularWords()
+//    viewModel.reloadPopularWords()
+    delegate?.didTapReroll()
     collectionView.reloadData()
 //    coreData.clearEntityData(entityName: "Bookmark") // FIX: - 目前是重置 core data entity Bookmark 按鈕
   }
@@ -131,18 +118,17 @@ extension RandomWordsCollectionView {
 
 extension RandomWordsCollectionView: UICollectionViewDataSource, UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//    return viewModel.popularWords.count
-    return viewModel.randomData.count
+    return 0
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell
-    let word = viewModel.randomData[indexPath.item].word
+//    let word = viewModel.randomData[indexPath.item].word
 //    let word = viewModel.popularWords[indexPath.item]
 //    let word = viewController.viewModel.popularWords[indexPath.item]
     // popularWordsErrorState[indexPath.item]
-    cell.configure(with: word, in: indexPath.item)
-    cell.delegate = delegate
+//    cell.configure(with: word, in: indexPath.item)
+//    cell.delegate = delegate
     
     return cell
   }

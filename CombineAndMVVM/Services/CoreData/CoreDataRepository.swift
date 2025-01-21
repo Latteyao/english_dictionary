@@ -8,7 +8,8 @@
 import CoreData
 import Foundation
 
-class CoreDataRepository: CoreDataContextService {
+class CoreDataRepository: CoreDataContextService{
+  
   init() {}
 
   // MARK: - Core Data Stack
@@ -28,4 +29,7 @@ class CoreDataRepository: CoreDataContextService {
   var context: NSManagedObjectContext {
     return persistentContainer.viewContext
   }
+  
 }
+
+

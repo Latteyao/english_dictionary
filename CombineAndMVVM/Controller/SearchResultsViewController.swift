@@ -18,7 +18,9 @@ class SearchResultsViewController: BaseThemedViewController {
 
   var searchViewModel: SearchViewModel
 
-  var dataViewModel: DataViewModel
+  private var dataViewModel: DataViewModel
+
+  private var bookmarkViewModel: BookmarkViewModel
 
   var cancellables: Set<AnyCancellable> = []
 
@@ -42,10 +44,12 @@ class SearchResultsViewController: BaseThemedViewController {
 
   init(
     viewModel: DataViewModel,
-    searchViewModel: SearchViewModel = SearchViewModel())
-  {
+    searchViewModel: SearchViewModel = SearchViewModel(),
+    bookmarkViewModel: BookmarkViewModel
+  ) {
     self.dataViewModel = viewModel
     self.searchViewModel = searchViewModel
+    self.bookmarkViewModel = bookmarkViewModel
     super.init()
   }
 
@@ -63,6 +67,7 @@ class SearchResultsViewController: BaseThemedViewController {
     configureSearchController()
     configureTableView()
     configureConstraints()
+    setupBindings() // 設置訂閱
   }
 
   override func viewDidAppear(_ animated: Bool) {
@@ -158,11 +163,24 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
     guard let resultdata = searchViewModel.searchResults.results.data?[indexPath.row] else { return }
 //    dataViewModel.fetchData(word: resultdata)
     dataViewModel.fetchSingleWord(resultdata)
-    DispatchQueue.main.async {
-      let wordDetailViewController = WordDetailViewController(viewModel: self.dataViewModel)
-      print("navigation push to \(wordDetailViewController)")
-      self.navigationController?.pushViewController(wordDetailViewController, animated: true)
-    }
+//
+//    // Fix - 這邊要先判斷是否被訂閱 再丟給 WordDetailViewController 顯示狀態
+//    // 然後使用代理人 這邊要寫訂閱儲存的方法
+//    // WordDetailViewController 裡面要寫 被訂閱的流程
+//    // 再配合 UI 更新
+//    dataViewModel.$detailState
+//      .sink { data in
+//        DispatchQueue.main.async {
+//          let wordDetailViewController = WordDetailViewController(data: data,
+//                                                                  isbookmarked: self.bookmarkViewModel.isBookmarkExist(name: resultdata))
+//          wordDetailViewController.wordDetailDelegate = self
+//    //      print(self.dataViewModel.detailState)
+//          print("navigation push to \(wordDetailViewController)")
+//          self.navigationController?.pushViewController(wordDetailViewController, animated: true)
+//        }
+//      }
+//      .store(in: &cancellables)
+//
   }
 
   private func scrollToTop() {
@@ -184,5 +202,40 @@ extension SearchResultsViewController {
       resultsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
       resultsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12)
     ])
+  }
+}
+
+extension SearchResultsViewController: WordDetailViewDelegate {
+  func wordDateilViewDidTapBookmarkbutton(_ title: String, data: WordData) {
+    let isBookmarked: Bool = bookmarkViewModel.isBookmarkExist(name: title)
+    if isBookmarked {
+      bookmarkViewModel.deleteBookmark(name: title)
+    } else {
+      bookmarkViewModel.addBookmark(name: title, data: data)
+    }
+  }
+}
+
+// MARK: - Bindings
+
+extension SearchResultsViewController {
+  private func setupBindings() {
+    dataViewModel.$detailState
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] data in
+        guard let self = self else { return }
+        guard let word = data.wordData.word, !word.isEmpty else {
+          print("Data is empty or invalid, not navigating")
+          return
+        }
+        let wordDetailVC = WordDetailViewController(
+          data: data,
+          isbookmarked: self.bookmarkViewModel.isBookmarkExist(name: word)
+        )
+        wordDetailVC.wordDetailDelegate = self
+        print("navigation push to \(wordDetailVC)")
+        self.navigationController?.pushViewController(wordDetailVC, animated: true)
+      }
+      .store(in: &cancellables)
   }
 }

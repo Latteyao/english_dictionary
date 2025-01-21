@@ -8,20 +8,16 @@
 import CoreData
 import Foundation
 
-protocol CoreDataContextService: CoreDataSavable, CoreDataEntityDeletable {
+protocol CoreDataContextService: CoreDataSavable, CoreDataEntityDeletable{
   var context: NSManagedObjectContext { get }
 }
-
 /// 負責存檔功能的協議
 protocol CoreDataSavable {
   /// CoreDataSavable 的型別需要提供一個可存取的 NSManagedObjectContext
-  var context: NSManagedObjectContext { get }
-
-  /// 儲存 Context 內所有變更
   func saveContext()
 }
 
-extension CoreDataSavable {
+extension CoreDataSavable where Self: CoreDataContextService {
   /// 儲存變更到 Core Data
   func saveContext() {
     // 確認是否有變更需要儲存
@@ -31,7 +27,8 @@ extension CoreDataSavable {
         try context.save()
       } catch {
         // 錯誤處理：列印失敗訊息，避免應用程式崩潰
-        print("Failed to save context: \(error)")
+        print("Core Data Save Error: \(error.localizedDescription)")
+        print("Error full: \(error)") 
       }
     }
   }
@@ -40,14 +37,13 @@ extension CoreDataSavable {
 /// 負責刪除實體資料的協議
 protocol CoreDataEntityDeletable {
   /// CoreDataEntityDeletable 的型別需要提供一個可存取的 NSManagedObjectContext
-  var context: NSManagedObjectContext { get }
 
   /// 清除指定實體的所有資料
   /// - Parameter entityName: 實體名稱
   func clearEntityData(named entityName: String)
 }
 
-extension CoreDataEntityDeletable where Self: CoreDataSavable {
+extension CoreDataEntityDeletable where Self: CoreDataContextService {
   /// 清除指定 entity 的所有資料
   /// - Parameter entityName: 實體名稱
   func clearEntityData(named entityName: String) {

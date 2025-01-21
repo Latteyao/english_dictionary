@@ -16,9 +16,9 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   private let bookmarkViewModel: BookmarkViewModel = .init()
   private let detailWordCollectionController: DetailWordCollectionController = .init()
-  private let dataViewModel: DataViewModel?
-  private var cancellables: Set<AnyCancellable> = []
-  private var isBookmarked = false
+  private var isBookmarked: Bool
+  private let data: WordDetailState
+  weak var wordDetailDelegate: WordDetailViewDelegate?
   
   // MARK: - UI Elements
   
@@ -48,13 +48,7 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
     return label
   }()
   
-  let voiceButton: UIButton = {
-    let button = UIButton(type: .system)
-    button.setImage(UIImage(systemName: "speaker.wave.2.fill"), for: .normal)
-    button.translatesAutoresizingMaskIntoConstraints = false
-    
-    return button
-  }()
+  var voiceButton: UIButton!
   
   let separatorView: UIView = { // 分隔線
     let view = UIView()
@@ -65,11 +59,10 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   // MARK: - Initializer
 
-  init(viewModel: DataViewModel) {
-    self.dataViewModel = viewModel
+  init(data: WordDetailState, isbookmarked: Bool) {
+    self.data = data
+    self.isBookmarked = isbookmarked
     super.init()
-//    super.init(themeViewModel: .init(themeManager: .shared))
-    
   }
   
   deinit {
@@ -85,11 +78,12 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    isBookmarked = bookmarkViewModel.isBookmarkExist(title: dataViewModel?.detailState.data.word ?? ""/*viewData.word ?? ""*/)
+    updateUI(with: data.wordData)
+//    isBookmarked = bookmarkViewModel.isBookmarkExist(title: data.wordData.word ?? "")
     configureUI()
 //    setupLabelTextColor()
+    showError(data.error)
     configureConstraints() // 設定位置
-    bindingViewModel()
   }
 }
 
@@ -99,15 +93,20 @@ extension WordDetailViewController {
   private func configureUI() {
     configureBackButton()
     configureBookmarkButton()
-    configureButtonActions()
+    configureVoiceButton()
     setupViewHierarchy()
   }
   
   private func updateUI(with viewData: WordData) {
+//    guard let word = viewData.word else { return }
+//    guard let syllables = viewData.syllables else { return }
+//    guard let pronunciation = viewData.pronunciation else { return }
+//    guard let results = viewData.results else { return }
+    
     mainWordLabel.text = viewData.word
-    print("viewData.word: \(String(describing: viewData.word))") //FIX: Is nil
-    syllablesLabel.text = viewData.syllables?.list.joined(separator: " ") ?? "".emptyOrNil()
-    pronunciationLabel.text = viewData.pronunciation?.all ?? "".emptyOrNil()
+    syllablesLabel.text = viewData.syllables?.list.joined(separator: " ").emptyOrNil()
+    pronunciationLabel.text = viewData.pronunciation?.all.emptyOrNil()
+//    print(viewData.pronunciation?.all ?? "".emptyOrNil())
     detailWordCollectionController.items = viewData.results ?? [] // 把 results 丟到 下方的 DetailViewController
   }
   
@@ -145,10 +144,17 @@ extension WordDetailViewController {
   
   private func updateBookmarkButtonState() {
     let bookmarkButton = UIButton(type: .system)
-    let bookmarkImage = UIImage(systemName: isBookmarked ? "bookmark" : "bookmark.fill")
+    let bookmarkImage = UIImage(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
     bookmarkButton.setImage(bookmarkImage, for: .normal)
     bookmarkButton.addTarget(self, action: #selector(bookmarkButtonPressed), for: .touchUpInside)
     navigationItem.rightBarButtonItem = UIBarButtonItem(customView: bookmarkButton)
+  }
+  
+  private func configureVoiceButton(){
+    voiceButton = UIButton(type: .system)
+    voiceButton.setImage(UIImage(systemName: "speaker.wave.2.fill"), for: .normal)
+    voiceButton.translatesAutoresizingMaskIntoConstraints = false
+    configureVoiceButtonActions()
   }
 }
 
@@ -167,47 +173,9 @@ extension WordDetailViewController: UIGestureRecognizerDelegate {
 // MARK: - Sub Button AddTarget
 
 extension WordDetailViewController {
-  private func configureButtonActions() {
+  private func configureVoiceButtonActions() {
+    // 假如沒有 pronunciation 不會有聲音
     voiceButton.addTarget(self, action: #selector(speakButtonPressed), for: .touchUpInside)
-  }
-}
-
-// MARK: - ViewModel Binding
-
-extension WordDetailViewController {
-  private func bindingViewModel() {
-    bindViewData()
-    bindErrorState()
-  }
- 
-  private func bindViewData() {
-    
-    dataViewModel?.$detailState
-      .receive(on: DispatchQueue.main)
-      .sink(receiveValue: { [weak self] viewData in
-        self?.updateUI(with: viewData.data)
-        self?.showError(viewData.error)
-      })
-      .store(in: &cancellables)
-    
-    
-//    dataViewModel?.$viewData
-//      .receive(on: DispatchQueue.main)
-//      .sink(receiveValue: { [weak self] viewData in
-//        guard let self = self else { return }
-//        self.updateUI(with: viewData)
-//      })
-//      .store(in: &cancellables)
-  }
-  
-  private func bindErrorState() {
-//    dataViewModel?.$errorState
-//      .receive(on: DispatchQueue.main)
-//      .sink(receiveValue: { [weak self] error in
-//        guard let self = self, let error = error , error != "" else { return }
-//        self.showError(error.description)
-//      })
-//      .store(in: &cancellables)
   }
 }
 
@@ -219,8 +187,7 @@ extension WordDetailViewController {
   }
   
   @objc func speakButtonPressed() {
-    guard let dataViewModel = dataViewModel else { return }
-    guard let word = dataViewModel.detailState.data.word else { return }
+    guard let word = data.wordData.word else { return }
     let speechSynthesizer = AVSpeechSynthesizer()
     let speechUtterance = AVSpeechUtterance(string: word)
     speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")
@@ -228,15 +195,19 @@ extension WordDetailViewController {
   }
   
   @objc func bookmarkButtonPressed() {
-    guard let dataViewModel = dataViewModel else { return }
-    guard let word = dataViewModel.detailState.data.word else { return }
-    if isBookmarked {
-      bookmarkViewModel.addBookmark(title: word, data: dataViewModel.detailState.data)
-    } else {
-      bookmarkViewModel.deleteBookmark(title: word)
-    }
+//    guard let dataViewModel = dataViewModel else { return }
+//    guard let word = data.wordData.word else { return }
+//    if isBookmarked {
+//      bookmarkViewModel.addBookmark(title: word, data: data.wordData)
+//    } else {
+//      bookmarkViewModel.deleteBookmark(title: word)
+//    }
+    guard let title = data.wordData.word else { return }
+    print("is nil \(wordDetailDelegate == nil)")
+    wordDetailDelegate?.wordDateilViewDidTapBookmarkbutton(title, data: data.wordData)
     // 創建新的 UIBarButtonItem，並更新圖示
     isBookmarked.toggle()
+//    print("isBookmarked: \(isBookmarked)")
     updateBookmarkButtonState()
   }
 }
@@ -277,13 +248,13 @@ extension WordDetailViewController {
   private func setupVoiceButtonConstraints() {
     NSLayoutConstraint.activate([
       voiceButton.topAnchor.constraint(equalTo: pronunciationLabel.topAnchor, constant: 4),
-      voiceButton.leadingAnchor.constraint(equalTo: pronunciationLabel.trailingAnchor, constant: 8)
+      voiceButton.leadingAnchor.constraint(equalTo: pronunciationLabel.trailingAnchor, constant: 16)
     ])
   }
   
   private func setupSeparatorViewConstraints() {
     NSLayoutConstraint.activate([
-      separatorView.topAnchor.constraint(equalTo: pronunciationLabel.bottomAnchor, constant: 20),
+      separatorView.topAnchor.constraint(equalTo: voiceButton.bottomAnchor, constant: 20),
       separatorView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
       separatorView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
       separatorView.heightAnchor.constraint(equalToConstant: 1)

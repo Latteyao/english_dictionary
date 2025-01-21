@@ -6,22 +6,31 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: BaseThemedViewController {
   // MARK: - Properties
 
   // FIX - 必須加入 Loading 的畫面 不然會提早點入會沒有資料
   private var dataViewModel: DataViewModel
+  
+  private var bookmarkViewModel: BookmarkViewModel
 
   private var searchController: UISearchController!
 
   var randomWordsCollectionView: RandomWordsCollectionView!
+  
+  private var cancellables = Set<AnyCancellable>()
 
-  var headerView: HeaderView!
+  private var headerView: HeaderView!
+  
+  
+  
+  
 
-  init(viewModel: DataViewModel) {
-    
+  init(viewModel: DataViewModel, bookmarkViewModel: BookmarkViewModel) {
     self.dataViewModel = viewModel
+    self.bookmarkViewModel = bookmarkViewModel
     super.init()
   }
   
@@ -38,26 +47,26 @@ class ViewController: BaseThemedViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-//    setViewModelCall() // 呼叫 ViewModel 隨機熱門單字
-    viewModelCall() // 優先獲取所有熱門單字資料 ( 呼叫 ＡＰＩ 一次抓取 )
     configureUI() // 所有 View
     setupView()
     configureConstraints()
+    setupBindings()
   }
 }
 
-// MARK: - ViewModel Interaction
-
-extension ViewController {
-//  private func setViewModelCall() {
-//    dataViewModel.rollDice()
-//  }
-
-  private func viewModelCall() {
-//    Task { await dataViewModel.fetchAllpopularWords() }
-    dataViewModel.fetchPopularWords()
-  }
+extension ViewController{
+  private func setupBindings() {
+          dataViewModel.$randomData
+              .receive(on: DispatchQueue.main)
+              .sink { [weak self] _ in
+                self?.randomWordsCollectionView.collectionView.reloadData()
+              }
+              .store(in: &cancellables)
+          
+          // 如果有其他需要綁定的屬性，可以在這裡添加
+      }
 }
+
 
 // MARK: - Search Bar Delegate Methods
 
@@ -65,7 +74,7 @@ extension ViewController: UISearchControllerDelegate, UISearchResultsUpdating, U
   func updateSearchResults(for searchController: UISearchController) {}
 
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-    let searchResultsViewController = SearchResultsViewController(viewModel: dataViewModel)
+    let searchResultsViewController = SearchResultsViewController(viewModel: dataViewModel, bookmarkViewModel: bookmarkViewModel)
     navigationController?.pushViewController(searchResultsViewController, animated: true)
     return true
   }
@@ -98,7 +107,7 @@ extension ViewController {
 
   /// Seach Controller
   private func configureSearchController() {
-    searchController = UISearchController(searchResultsController: SearchResultsViewController(viewModel: dataViewModel))
+    searchController = UISearchController(searchResultsController: SearchResultsViewController(viewModel: dataViewModel, bookmarkViewModel: bookmarkViewModel))
     searchController.searchBar.delegate = self
     searchController.searchResultsUpdater = self
     searchController.obscuresBackgroundDuringPresentation = false
@@ -113,16 +122,13 @@ extension ViewController {
   /// 設置隨機顯示Word的CollectionView
   private func configureRandomWordsCollectionView() {
     /// 設定RandomWordsCollectionView的frame
-    randomWordsCollectionView = RandomWordsCollectionView(viewModel: dataViewModel)
+    randomWordsCollectionView = RandomWordsCollectionView()
     /// delegate
     randomWordsCollectionView.translatesAutoresizingMaskIntoConstraints = false
     randomWordsCollectionView.delegate = self
-    randomWordsCollectionView.viewModel = dataViewModel
-
-    /// Constraints
+    randomWordsCollectionView.collectionView.dataSource = self
+    randomWordsCollectionView.collectionView.delegate = self
   }
-
-  /// 測試從viewModel的getData function 獲取資料
 }
 
 // MARK: - Constraints
@@ -153,18 +159,39 @@ extension ViewController {
   }
 }
 
+
+// MARK: - UICollectionViewDataSource
+
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate{
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return dataViewModel.randomData.count
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell
+    cell.configure(with: dataViewModel.randomData[indexPath.item].word)
+    cell.delegate = self
+    return cell
+  }
+  
+  
+}
+
 // MARK: - WordCollectionViewCellDelegate
 
 extension ViewController: WordCollectionViewCellDelegate {
+  func didTapReroll() {
+    dataViewModel.reloadPopularWords()
+  }
+  
   /// 按下按鈕事件觸發後頁面轉Detail View
-  func didTapWordButton(with word: String, in index: Int) {
-    dataViewModel.detailState.data = dataViewModel.randomData[index].wordData ?? .empty
-    dataViewModel.detailState.error = dataViewModel.randomData[index].errorDescription
-    dataViewModel.detailState.data.word = dataViewModel.randomData[index].word
-
-//    dataViewModel.newViewData(fallbackWord: word, form: dataViewModel.randomData[index])
-//    dataViewModel.errorState = dataViewModel.popularWordsErrorState[index]
-    let wordDetailViewController = WordDetailViewController(viewModel: dataViewModel)
+  func didTapWordButton(in cell: WordCollectionViewCell) {
+    
+    guard let indexPath = randomWordsCollectionView.collectionView.indexPath(for: cell) else { return }
+    dataViewModel.loadRandomDataToDetailState(form: dataViewModel.randomData[indexPath.item])
+    let wordDetailViewController = WordDetailViewController(data: dataViewModel.detailState,
+                                                            isbookmarked: self.bookmarkViewModel.isBookmarkExist(name: dataViewModel.randomData[indexPath.item].word))
+    wordDetailViewController.wordDetailDelegate = self
 //    let transition = CATransition()
 //    transition.type = .push  // 可以選擇其他效果：.push, .reveal 等
 //            transition.subtype = .fromRight  // 設定過渡的方向
@@ -175,5 +202,17 @@ extension ViewController: WordCollectionViewCellDelegate {
     /// 轉換下一個畫面
     print("navigation push to \(wordDetailViewController)")
     navigationController?.pushViewController(wordDetailViewController, animated: true)
+  }
+}
+
+
+extension ViewController: WordDetailViewDelegate {
+  func wordDateilViewDidTapBookmarkbutton(_ title: String, data: WordData) {
+    let isBookmarked: Bool = bookmarkViewModel.isBookmarkExist(name: title)
+    if isBookmarked {
+      bookmarkViewModel.deleteBookmark(name: title)
+    } else {
+      bookmarkViewModel.addBookmark(name: title, data: data)
+    }
   }
 }

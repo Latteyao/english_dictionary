@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class BookmarkViewController: BaseThemedViewController {
+  
   // MARK: - Properties
   
   var dataViewModel: DataViewModel
@@ -100,10 +101,11 @@ extension BookmarkViewController: UITableViewDataSource, UITableViewDelegate {
     // FIX : 這裡的資料要設定好 可以參考ViewController 的 didTapWordButton func 的寫法
     let data = bookmarkViewModel.bookmarks[indexPath.row].data
     if let data = data?.decode(WordData.self) {
-      dataViewModel.detailState.data = data
-//      dataViewModel.viewData = data
-      let wordDetailViewController = WordDetailViewController(viewModel: dataViewModel)
+      dataViewModel.loadDataToDetailState(form: data)
+      let wordDetailViewController = WordDetailViewController(data: dataViewModel.detailState,
+                                                              isbookmarked: bookmarkViewModel.isBookmarkExist(name: data.word ?? ""))
       wordDetailViewController.navigationItem.largeTitleDisplayMode = .never
+      wordDetailViewController.wordDetailDelegate = self
       // 按下去動畫
       tableView.deselectRow(at: indexPath, animated: true)
       print("navigation push to \(wordDetailViewController)")
@@ -126,5 +128,16 @@ extension BookmarkViewController {
       tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
       tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
     ])
+  }
+}
+
+extension BookmarkViewController:WordDetailViewDelegate {
+  func wordDateilViewDidTapBookmarkbutton(_ title: String, data: WordData) {
+    let isBookmarked: Bool = bookmarkViewModel.isBookmarkExist(name: title)
+    if isBookmarked {
+      bookmarkViewModel.deleteBookmark(name: title)
+    } else {
+      bookmarkViewModel.addBookmark(name: title, data: data)
+    }
   }
 }

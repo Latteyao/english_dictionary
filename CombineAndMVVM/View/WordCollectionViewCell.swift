@@ -16,10 +16,6 @@ class WordCollectionViewCell: UICollectionViewCell {
   
   weak var delegate: WordCollectionViewCellDelegate?
   
-  var cellWord:String?
-  
-  var index:Int?
-  
   let wordButton: UIButton = {
     let button = UIButton()
     button.backgroundColor = .black
@@ -54,9 +50,7 @@ extension WordCollectionViewCell {
   }
   
   ///設定按鈕Title
-   func configure(with word: String,in index:Int) {
-    self.cellWord = word
-    self.index = index
+   func configure(with word: String) {
     wordButton.setTitle(word, for: .normal)
   }
   
@@ -72,9 +66,7 @@ extension WordCollectionViewCell {
   
   /// 跳轉到字典頁面的邏輯
   @objc func navigateToDictionaryPage()  {
-    if let word = cellWord, let index = index {
-      delegate?.didTapWordButton(with: word,in: index)
-    }
+    delegate?.didTapWordButton(in: self)
   }
 }
 
