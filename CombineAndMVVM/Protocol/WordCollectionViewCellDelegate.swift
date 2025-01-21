@@ -12,6 +12,6 @@ import UIKit
 
 protocol WordCollectionViewCellDelegate: AnyObject {
   //按下按鈕事件
-  func didTapWordButton(with word: String,in index:Int)
-  
+  func didTapWordButton(in cell: WordCollectionViewCell)
+  func didTapReroll()
 }

@@ -28,8 +28,10 @@ class WordApiManager {
   
   func fetchData<T: Codable>(_ endpoint:Endpoint.RequestPath) -> AnyPublisher<T,NetworkError>{
     guard isMockEnabled else {
+      print("Mode is Mock")
       return mockDataManager.fetchMockData(endpoint)
     }
+    print("Mode is Network")
     return networkManager.fetchData(endpoint)
 
   }
@@ -40,11 +42,11 @@ class WordApiManager {
 // MARK: - Error Handling Enum
 
 
-enum NetworkError: Error {
-  case invalidResponse
-  case invalidData
-  case networkFailure
-  case unknown
+enum NetworkError:String, Error {
+  case invalidResponse = "Invalid HTTP response"
+  case invalidData = "Invalid data"
+  case networkFailure = "Network failure"
+  case unknown = "Unknown error"
 }
 
 

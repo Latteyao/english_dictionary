@@ -6,24 +6,32 @@
 //
 
 import UIKit
+import Combine
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate{
 
 
   var window: UIWindow?
+  private var cancellables = Set<AnyCancellable>()
+  
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//    let backImage = UIImage(systemName: "arrowshape.backward.fill")?.withRenderingMode(.alwaysOriginal)
-//    let backIndicatorImage = backImage?.stretchableImage(withLeftCapWidth: 0, topCapHeight: 0)
-//    
-//    UINavigationBar.appearance().backIndicatorImage = backIndicatorImage
-//    UINavigationBar.appearance().backIndicatorTransitionMaskImage = backIndicatorImage
-//    UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .normal)
-////
-//    UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.clear], for: .highlighted)
     
     // Set navigation bar delegate
-    UINavigationBar.appearance().delegate = self
+//    UINavigationBar.appearance().delegate = self
+    
+    // 創建 UIWindow 並設定初始畫面
+//            window = UIWindow(frame: UIScreen.main.bounds)
+//            let launchViewController = LaunchViewController()
+//            window?.rootViewController = launchViewController
+//            window?.makeKeyAndVisible()
+//
+//    // 訂閱啟動完成事件
+//           launchViewController.launchCompletion
+//               .sink { [weak self] in
+//                   self?.navigateToMainView()
+//               }
+//               .store(in: &cancellables)
     
     // Override point for customization after application launch.
     return true
@@ -55,3 +63,21 @@ extension AppDelegate:UINavigationBarDelegate{
   }
 }
 
+
+extension AppDelegate{
+  
+  private func navigateToMainView() {
+          // 設置主界面
+          let tabBarController = TabBarController()
+          guard let window = window else { return }
+          UIView.transition(
+              with: window,
+              duration: 0.7,
+              options: .transitionCrossDissolve,
+              animations: {
+                  self.window?.rootViewController = tabBarController
+              },
+              completion: nil
+          )
+      }
+}

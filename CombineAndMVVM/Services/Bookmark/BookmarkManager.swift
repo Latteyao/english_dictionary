@@ -50,6 +50,7 @@ extension BookmarkManager {
     bookmark.data = data
     coreDataRepository.saveContext()
     print("Bookmark saved")
+    
   }
 
   /// 獲取所有 Entities(Bookmark) 書籤

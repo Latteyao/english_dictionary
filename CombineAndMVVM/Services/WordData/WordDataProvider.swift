@@ -21,7 +21,7 @@ class WordDataProvider: WordDataService, WordDataFetcher {
   private let localWordService: LocalWordService
   
   /// 暴露給外部的熱門單字清單
-  private(set) var popularWords: [String] = []
+   var popularWords: [String] = []
   
   // MARK: - Initializer
   
@@ -54,7 +54,7 @@ extension WordDataProvider {
         .fetchData(Endpoint.RequestPath.general(for: word))
         .map { wordData in
           // 成功時: 帶回 wordData
-          PopularWordResult(word: word, wordData: wordData, errorDescription: nil)
+          return PopularWordResult(word: word, wordData: wordData, errorDescription: nil)
         }
         .catch { error -> Just<PopularWordResult> in
           // 失敗時: 將錯誤描述放入 errorDescription

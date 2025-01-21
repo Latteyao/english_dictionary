@@ -100,9 +100,11 @@ extension BookmarkViewController: UITableViewDataSource, UITableViewDelegate {
     // FIX : 這裡的資料要設定好 可以參考ViewController 的 didTapWordButton func 的寫法
     let data = bookmarkViewModel.bookmarks[indexPath.row].data
     if let data = data?.decode(WordData.self) {
-      dataViewModel.detailState.data = data
+      dataViewModel.loadDataToDetailState(form: data)
+//      dataViewModel.detailState.wordData = data
 //      dataViewModel.viewData = data
-      let wordDetailViewController = WordDetailViewController(viewModel: dataViewModel)
+//      let word = dataViewModel.detailState.data.word ?? ""
+      let wordDetailViewController = WordDetailViewController(data: dataViewModel.detailState, isbookmarked: bookmarkViewModel.isBookmarkExist(name: data.word ?? ""))
       wordDetailViewController.navigationItem.largeTitleDisplayMode = .never
       // 按下去動畫
       tableView.deselectRow(at: indexPath, animated: true)
