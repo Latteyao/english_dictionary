@@ -32,7 +32,7 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   var pronunciationLabel: UILabel = {
     let label = UILabel()
-    label.text = "❎"
+    label.text = "N/A"
     label.font = UIFont.systemFont(ofSize: 24)
     label.textColor = .systemGray2
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -41,7 +41,7 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   let syllablesLabel: UILabel = {
     let label = UILabel()
-    label.text = "❎"
+    label.text = "N/A"
     label.font = UIFont.systemFont(ofSize: 24)
     label.textColor = .systemGray2
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -98,16 +98,24 @@ extension WordDetailViewController {
   }
   
   private func updateUI(with viewData: WordData) {
-//    guard let word = viewData.word else { return }
-//    guard let syllables = viewData.syllables else { return }
-//    guard let pronunciation = viewData.pronunciation else { return }
-//    guard let results = viewData.results else { return }
-    
     mainWordLabel.text = viewData.word
-    syllablesLabel.text = viewData.syllables?.list.joined(separator: " ").emptyOrNil()
-    pronunciationLabel.text = viewData.pronunciation?.all.emptyOrNil()
-//    print(viewData.pronunciation?.all ?? "".emptyOrNil())
-    detailWordCollectionController.items = viewData.results ?? [] // 把 results 丟到 下方的 DetailViewController
+        
+        // 更新音節標籤，若無音節則顯示佔位符
+        if let syllables = viewData.syllables?.list, !syllables.isEmpty {
+            syllablesLabel.text = syllables.joined(separator: " ")
+        } else {
+            syllablesLabel.text = "N/A"
+        }
+        
+        // 更新發音標籤，若無發音則顯示佔位符
+        if let pronunciation = viewData.pronunciation?.all, !pronunciation.isEmpty {
+            pronunciationLabel.text = pronunciation
+        } else {
+            pronunciationLabel.text = "N/A"
+        }
+        
+        // 更新詳細單字集合控制器的項目
+        detailWordCollectionController.items = viewData.results ?? []
   }
   
   private func configureBackButton() {

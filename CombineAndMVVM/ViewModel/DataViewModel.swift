@@ -69,7 +69,7 @@ extension DataViewModel {
       .sink(receiveCompletion: { [weak self] completion in
         switch completion {
         case .failure(let networkError):
-          self?.detailState.error = networkError.rawValue
+          self?.detailState = WordDetailState(wordData: .init(word: word, frequency: nil, syllables: nil, pronunciation: nil, results: nil), error: networkError.rawValue)
         case .finished:
           break
         }

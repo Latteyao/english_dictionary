@@ -163,7 +163,7 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
     guard let resultdata = searchViewModel.searchResults.results.data?[indexPath.row] else { return }
 //    dataViewModel.fetchData(word: resultdata)
     dataViewModel.fetchSingleWord(resultdata)
-//
+
 //    // Fix - 這邊要先判斷是否被訂閱 再丟給 WordDetailViewController 顯示狀態
 //    // 然後使用代理人 這邊要寫訂閱儲存的方法
 //    // WordDetailViewController 裡面要寫 被訂閱的流程
@@ -235,6 +235,8 @@ extension SearchResultsViewController {
         wordDetailVC.wordDetailDelegate = self
         print("navigation push to \(wordDetailVC)")
         self.navigationController?.pushViewController(wordDetailVC, animated: true)
+        // 重置 detailState 以防止重複導航
+        dataViewModel.resetState()
       }
       .store(in: &cancellables)
   }

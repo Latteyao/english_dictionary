@@ -58,7 +58,7 @@ extension WordDataProvider {
         }
         .catch { error -> Just<PopularWordResult> in
           // 失敗時: 將錯誤描述放入 errorDescription
-          let result = PopularWordResult(word: word, wordData: nil, errorDescription: error.localizedDescription)
+          let result = PopularWordResult(word: word, wordData: nil, errorDescription: error.rawValue)
           return Just(result)
         }
         .eraseToAnyPublisher()

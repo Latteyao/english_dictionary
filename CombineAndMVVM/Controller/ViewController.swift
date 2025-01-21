@@ -202,6 +202,8 @@ extension ViewController: WordCollectionViewCellDelegate {
     /// 轉換下一個畫面
     print("navigation push to \(wordDetailViewController)")
     navigationController?.pushViewController(wordDetailViewController, animated: true)
+    // 重置 detailState 以防止重複導航
+    dataViewModel.resetState()
   }
 }
 
