@@ -98,16 +98,12 @@ extension SearchResultsViewController: UISearchResultsUpdating, UISearchBarDeleg
   }
 
   func updateSearchResults(for searchController: UISearchController) {
-//    print(searchController.searchBar.text  ?? "")
     guard let query = searchController.searchBar.text else { return }
     searchViewModel.search(query: query) { [weak self] in
-
-//      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
       self?.resultsTableView.separatorStyle = .singleLine
       self?.resultsTableView.reloadData()
       self?.scrollToTop()
       print("results updated")
-//      }
     }
   }
 
@@ -133,7 +129,6 @@ extension SearchResultsViewController {
     resultsTableView.tableFooterView = UIView() // 沒有資料的cell欄位隱藏分隔線
     resultsTableView.separatorStyle = .none
     resultsTableView.register(BookmarkCellView.self, forCellReuseIdentifier: "bookmarkCell")
-
     view.addSubview(resultsTableView)
   }
 }
@@ -147,7 +142,6 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "bookmarkCell", for: indexPath) as! BookmarkCellView
-
     cell.configure(with: searchViewModel.searchResults.results.data?[indexPath.row] ?? "")
     return cell
   }
@@ -178,6 +172,8 @@ extension SearchResultsViewController {
     ])
   }
 }
+
+// MARK: - Delegate
 
 extension SearchResultsViewController: WordDetailViewDelegate {
   func wordDateilViewDidTapBookmarkbutton(_ title: String, data: WordData) {
