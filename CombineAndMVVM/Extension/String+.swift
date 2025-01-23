@@ -29,11 +29,3 @@ extension String {
     
   }
 }
-
-// MARK: - 活動指示器
-var activityIndicator: UIActivityIndicatorView = {
-  var activityIndicator = UIActivityIndicatorView(style: .medium)
-  activityIndicator.hidesWhenStopped = true
-  return activityIndicator
-}()
-

@@ -24,22 +24,6 @@ class SearchResultsViewController: BaseThemedViewController {
 
   var cancellables: Set<AnyCancellable> = []
 
-  let activityIndicator: UIActivityIndicatorView = {
-    let activityIndicator = UIActivityIndicatorView(style: .large)
-    activityIndicator.color = .systemBlue
-    activityIndicator.hidesWhenStopped = true
-    return activityIndicator
-  }()
-
-  /// 搜尋Text
-  var searchText: String? {
-    didSet {
-      if isViewLoaded {
-        searchForText()
-      }
-    }
-  }
-
   // MARK: - Initializer
 
   init(
