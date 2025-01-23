@@ -46,7 +46,6 @@
 		10AB2FFB2D019A93006A9F42 /* BookmarkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB2FFA2D019A93006A9F42 /* BookmarkViewModel.swift */; };
 		10AB2FFD2D019C08006A9F42 /* Data+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB2FFC2D019C08006A9F42 /* Data+.swift */; };
 		10AB30012D0828ED006A9F42 /* ResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB30002D0828ED006A9F42 /* ResponseModel.swift */; };
-		10B60AB52D2E6EB10030BE9F /* Publisher+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B60AB42D2E6EB10030BE9F /* Publisher+.swift */; };
 		10BB136A2CE7663A00C6D1F4 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BB13692CE7663900C6D1F4 /* String+.swift */; };
 		10BB136F2CF4F2A600C6D1F4 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BB136E2CF4F2A600C6D1F4 /* ThemeManager.swift */; };
 		10BB13712CF634B200C6D1F4 /* BaseThemedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BB13702CF634B200C6D1F4 /* BaseThemedViewController.swift */; };
@@ -101,7 +100,6 @@
 		10AB2FFA2D019A93006A9F42 /* BookmarkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkViewModel.swift; sourceTree = "<group>"; };
 		10AB2FFC2D019C08006A9F42 /* Data+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+.swift"; sourceTree = "<group>"; };
 		10AB30002D0828ED006A9F42 /* ResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseModel.swift; sourceTree = "<group>"; };
-		10B60AB42D2E6EB10030BE9F /* Publisher+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+.swift"; sourceTree = "<group>"; };
 		10BB13692CE7663900C6D1F4 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		10BB136E2CF4F2A600C6D1F4 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		10BB13702CF634B200C6D1F4 /* BaseThemedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseThemedViewController.swift; sourceTree = "<group>"; };
@@ -207,7 +205,6 @@
 			children = (
 				10BB13692CE7663900C6D1F4 /* String+.swift */,
 				10AB2FFC2D019C08006A9F42 /* Data+.swift */,
-				10B60AB42D2E6EB10030BE9F /* Publisher+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -475,7 +472,6 @@
 				107080782C2D5C4D0069C139 /* MySecret.swift in Sources */,
 				10A7E0E22D158901005EE4A4 /* DataViewModel.swift in Sources */,
 				10AB2FFD2D019C08006A9F42 /* Data+.swift in Sources */,
-				10B60AB52D2E6EB10030BE9F /* Publisher+.swift in Sources */,
 				107E9B242D3651A4008DC87D /* WordDetailState.swift in Sources */,
 				1090CB8A2D29253F007B6AAA /* ErrorDisplayView.swift in Sources */,
 				107080AE2C5CE7790069C139 /* DetailWordCollectionCellView.swift in Sources */,
