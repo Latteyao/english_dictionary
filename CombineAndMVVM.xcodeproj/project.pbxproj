@@ -644,7 +644,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LQVW38952Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CombineAndMVVM/Info.plist;
+				INFOPLIST_FILE = CombineAndMVVM/AppConfiguration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
@@ -675,7 +675,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = LQVW38952Z;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = CombineAndMVVM/Info.plist;
+				INFOPLIST_FILE = CombineAndMVVM/AppConfiguration/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIMainStoryboardFile = "";
