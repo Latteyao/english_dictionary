@@ -156,7 +156,6 @@
 				107E9B152D34DF2D008DC87D /* Services */,
 				107080742C2C29C40069C139 /* ViewModel */,
 				107080732C2C29BA0069C139 /* View */,
-				107080A62C4F9C190069C139 /* Controller */,
 				107080712C2C29AA0069C139 /* Model */,
 				1070807B2C3699500069C139 /* Extension */,
 				1090CB862D27F596007B6AAA /* Resources */,
@@ -185,12 +184,13 @@
 		107080732C2C29BA0069C139 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				1070809E2C3FC0860069C139 /* RandomWordsCollectionView.swift */,
-				107080A02C3FC3290069C139 /* WordCollectionViewCell.swift */,
-				107080A72C4F9C9E0069C139 /* HeaderView.swift */,
-				107080AD2C5CE7790069C139 /* DetailWordCollectionCellView.swift */,
-				10BB13722CF9B33D00C6D1F4 /* BookmarkCellView.swift */,
-				1090CB892D29253F007B6AAA /* ErrorDisplayView.swift */,
+				10A21C202D42147900E3EA51 /* ErrorView */,
+				10A21C1F2D42140F00E3EA51 /* Theme */,
+				10A21C1C2D42137700E3EA51 /* Launch */,
+				10A21C1B2D42135A00E3EA51 /* MainView */,
+				10A21C1D2D4213A300E3EA51 /* SearchView */,
+				10A21C1E2D4213C800E3EA51 /* BookmarkView */,
+				10A21C212D421A9400E3EA51 /* WordView */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -214,21 +214,6 @@
 				10B60AB42D2E6EB10030BE9F /* Publisher+.swift */,
 			);
 			path = Extension;
-			sourceTree = "<group>";
-		};
-		107080A62C4F9C190069C139 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				10C9B31B2D20974100B03B34 /* LaunchViewController.swift */,
-				107080612C2C26340069C139 /* MainViewController.swift */,
-				10A97E4E2D0991550007D8A5 /* SearchResultsViewController.swift */,
-				1070807C2C3D1AD50069C139 /* TabBarController.swift */,
-				107080A22C4116D10069C139 /* BookmarkViewController.swift */,
-				107080A42C411A3E0069C139 /* WordDetailViewController.swift */,
-				107080AB2C5CE6B30069C139 /* DetailWordCollectionController.swift */,
-				10BB13702CF634B200C6D1F4 /* BaseThemedViewController.swift */,
-			);
-			path = Controller;
 			sourceTree = "<group>";
 		};
 		107E9B152D34DF2D008DC87D /* Services */ = {
@@ -307,6 +292,77 @@
 				10A97E502D0C16550007D8A5 /* SearchManager.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		10A21C1B2D42135A00E3EA51 /* MainView */ = {
+			isa = PBXGroup;
+			children = (
+				1070809E2C3FC0860069C139 /* RandomWordsCollectionView.swift */,
+				107080A72C4F9C9E0069C139 /* HeaderView.swift */,
+				1070807C2C3D1AD50069C139 /* TabBarController.swift */,
+				107080612C2C26340069C139 /* MainViewController.swift */,
+			);
+			path = MainView;
+			sourceTree = "<group>";
+		};
+		10A21C1C2D42137700E3EA51 /* Launch */ = {
+			isa = PBXGroup;
+			children = (
+				10C9B31B2D20974100B03B34 /* LaunchViewController.swift */,
+			);
+			path = Launch;
+			sourceTree = "<group>";
+		};
+		10A21C1D2D4213A300E3EA51 /* SearchView */ = {
+			isa = PBXGroup;
+			children = (
+				10A97E4E2D0991550007D8A5 /* SearchResultsViewController.swift */,
+			);
+			path = SearchView;
+			sourceTree = "<group>";
+		};
+		10A21C1E2D4213C800E3EA51 /* BookmarkView */ = {
+			isa = PBXGroup;
+			children = (
+				107080A22C4116D10069C139 /* BookmarkViewController.swift */,
+				10BB13722CF9B33D00C6D1F4 /* BookmarkCellView.swift */,
+			);
+			path = BookmarkView;
+			sourceTree = "<group>";
+		};
+		10A21C1F2D42140F00E3EA51 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				10BB13702CF634B200C6D1F4 /* BaseThemedViewController.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		10A21C202D42147900E3EA51 /* ErrorView */ = {
+			isa = PBXGroup;
+			children = (
+				1090CB892D29253F007B6AAA /* ErrorDisplayView.swift */,
+			);
+			path = ErrorView;
+			sourceTree = "<group>";
+		};
+		10A21C212D421A9400E3EA51 /* WordView */ = {
+			isa = PBXGroup;
+			children = (
+				107080A42C411A3E0069C139 /* WordDetailViewController.swift */,
+				107080A02C3FC3290069C139 /* WordCollectionViewCell.swift */,
+				10A21C222D421AEB00E3EA51 /* WordResultView */,
+			);
+			path = WordView;
+			sourceTree = "<group>";
+		};
+		10A21C222D421AEB00E3EA51 /* WordResultView */ = {
+			isa = PBXGroup;
+			children = (
+				107080AD2C5CE7790069C139 /* DetailWordCollectionCellView.swift */,
+				107080AB2C5CE6B30069C139 /* DetailWordCollectionController.swift */,
+			);
+			path = WordResultView;
 			sourceTree = "<group>";
 		};
 		10BB4F4C2D2A5B3A00D0D87E /* Protocol */ = {

@@ -103,6 +103,7 @@ extension BookmarkViewController: UITableViewDataSource, UITableViewDelegate {
     if let data = data?.decode(WordData.self) {
       dataViewModel.loadDataToDetailState(form: data)
       let wordDetailViewController = WordDetailViewController(data: dataViewModel.detailState,
+                                                              bookmark: bookmarkViewModel, 
                                                               isbookmarked: bookmarkViewModel.isBookmarkExist(name: data.word ?? ""))
       wordDetailViewController.navigationItem.largeTitleDisplayMode = .never
       wordDetailViewController.wordDetailDelegate = self

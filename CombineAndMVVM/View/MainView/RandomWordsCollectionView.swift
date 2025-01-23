@@ -52,13 +52,6 @@ class RandomWordsCollectionView: UIView {
     setupCollectionView()
     randomButtonAction()
   }
-//  
-//  init(){
-//    super.init(frame: .zero)
-//    setupCollectionView()
-//    randomButtonAction()
-//    
-//  }
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -118,18 +111,11 @@ extension RandomWordsCollectionView {
 
 extension RandomWordsCollectionView: UICollectionViewDataSource, UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return 0
+    return 3
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell
-//    let word = viewModel.randomData[indexPath.item].word
-//    let word = viewModel.popularWords[indexPath.item]
-//    let word = viewController.viewModel.popularWords[indexPath.item]
-    // popularWordsErrorState[indexPath.item]
-//    cell.configure(with: word, in: indexPath.item)
-//    cell.delegate = delegate
-    
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell  
     return cell
   }
 }

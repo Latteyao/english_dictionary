@@ -37,12 +37,6 @@ class MainViewController: BaseThemedViewController {
    required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-//  @available(*, unavailable)
-//  @MainActor required init?(coder: NSCoder) {
-//    fatalError("init(coder:) has not been implemented")
-//  }
-
   // MARK: - View Lifecycle
 
   override func viewDidLoad() {
@@ -190,15 +184,9 @@ extension MainViewController: WordCollectionViewCellDelegate {
     guard let indexPath = randomWordsCollectionView.collectionView.indexPath(for: cell) else { return }
     dataViewModel.loadRandomDataToDetailState(form: dataViewModel.randomData[indexPath.item])
     let wordDetailViewController = WordDetailViewController(data: dataViewModel.detailState,
+                                                            bookmark: bookmarkViewModel,
                                                             isbookmarked: self.bookmarkViewModel.isBookmarkExist(name: dataViewModel.randomData[indexPath.item].word))
     wordDetailViewController.wordDetailDelegate = self
-//    let transition = CATransition()
-//    transition.type = .push  // 可以選擇其他效果：.push, .reveal 等
-//            transition.subtype = .fromRight  // 設定過渡的方向
-//            transition.duration = 0.3  // 動畫持續時間
-//    transition.timingFunction = CAMediaTimingFunction(name: .easeOut)
-//    navigationController?.view.layer.add(transition, forKey: kCATransition)
-
     /// 轉換下一個畫面
     print("navigation push to \(wordDetailViewController)")
     navigationController?.pushViewController(wordDetailViewController, animated: true)

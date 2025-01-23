@@ -161,26 +161,7 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let resultdata = searchViewModel.searchResults.results.data?[indexPath.row] else { return }
-//    dataViewModel.fetchData(word: resultdata)
     dataViewModel.fetchSingleWord(resultdata)
-
-//    // Fix - 這邊要先判斷是否被訂閱 再丟給 WordDetailViewController 顯示狀態
-//    // 然後使用代理人 這邊要寫訂閱儲存的方法
-//    // WordDetailViewController 裡面要寫 被訂閱的流程
-//    // 再配合 UI 更新
-//    dataViewModel.$detailState
-//      .sink { data in
-//        DispatchQueue.main.async {
-//          let wordDetailViewController = WordDetailViewController(data: data,
-//                                                                  isbookmarked: self.bookmarkViewModel.isBookmarkExist(name: resultdata))
-//          wordDetailViewController.wordDetailDelegate = self
-//    //      print(self.dataViewModel.detailState)
-//          print("navigation push to \(wordDetailViewController)")
-//          self.navigationController?.pushViewController(wordDetailViewController, animated: true)
-//        }
-//      }
-//      .store(in: &cancellables)
-//
   }
 
   private func scrollToTop() {
@@ -230,6 +211,7 @@ extension SearchResultsViewController {
         }
         let wordDetailVC = WordDetailViewController(
           data: data,
+          bookmark: bookmarkViewModel,
           isbookmarked: self.bookmarkViewModel.isBookmarkExist(name: word)
         )
         wordDetailVC.wordDetailDelegate = self

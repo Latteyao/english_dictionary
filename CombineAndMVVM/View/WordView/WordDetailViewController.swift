@@ -14,7 +14,7 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   // MARK: - Properties
   
-  private let bookmarkViewModel: BookmarkViewModel = .init()
+  private let bookmarkViewModel: BookmarkViewModel
   private let detailWordCollectionController: DetailWordCollectionController = .init()
   private var isBookmarked: Bool
   private let data: WordDetailState
@@ -59,8 +59,9 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   
   // MARK: - Initializer
 
-  init(data: WordDetailState, isbookmarked: Bool) {
+  init(data: WordDetailState, bookmark: BookmarkViewModel , isbookmarked: Bool) {
     self.data = data
+    self.bookmarkViewModel = bookmark
     self.isBookmarked = isbookmarked
     super.init()
   }
