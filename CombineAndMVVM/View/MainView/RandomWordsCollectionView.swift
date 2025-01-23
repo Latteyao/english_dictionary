@@ -10,7 +10,6 @@ import UIKit
 
 /// 管理RandomWordsCollectionView
 class RandomWordsCollectionView: UIView {
-  
   // MARK: - Properties
   
   var collectionView: UICollectionView!
@@ -53,6 +52,7 @@ class RandomWordsCollectionView: UIView {
     randomButtonAction()
   }
   
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -61,6 +61,7 @@ class RandomWordsCollectionView: UIView {
 // MARK: - UI Configuration
 
 extension RandomWordsCollectionView {
+  /// 設置 CollectionView 和其他 UI 元素的配置
   private func setupCollectionView() {
     let layout = UICollectionViewFlowLayout()
     layout.scrollDirection = .vertical
@@ -81,7 +82,7 @@ extension RandomWordsCollectionView {
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     setupConstraints()
   }
-  
+  /// 調整子視圖的布局
   override func layoutSubviews() {
     super.layoutSubviews()
     if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
@@ -94,16 +95,16 @@ extension RandomWordsCollectionView {
 // MARK: - Button Action
 
 extension RandomWordsCollectionView {
-  
+  /// 設置隨機按鈕的動作
   func randomButtonAction() {
-    self.randomButton.addTarget(self, action: #selector(reroll), for: .touchUpInside)
+    randomButton.addTarget(self, action: #selector(reroll), for: .touchUpInside)
   }
-  
+  /// 隨機按鈕被點擊時觸發的方法
   @objc func reroll() {
-//    viewModel.reloadPopularWords()
+    // 通知 delegate 重新載入數據
     delegate?.didTapReroll()
+    // 重新載入 CollectionView 的數據
     collectionView.reloadData()
-//    coreData.clearEntityData(entityName: "Bookmark") // FIX: - 目前是重置 core data entity Bookmark 按鈕
   }
 }
 
@@ -115,7 +116,7 @@ extension RandomWordsCollectionView: UICollectionViewDataSource, UICollectionVie
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell  
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell
     return cell
   }
 }
@@ -123,13 +124,14 @@ extension RandomWordsCollectionView: UICollectionViewDataSource, UICollectionVie
 // MARK: - Constraints
 
 extension RandomWordsCollectionView {
+  /// 設置所有子視圖的約束
   private func setupConstraints() {
     setupHeaderLabelConstraints()
     setupRandomButtonConstraints()
     setupSeparatorViewConstraints()
     setupCollectionViewConstraints()
   }
-  
+  /// 設置 headerLabel 的約束
   private func setupHeaderLabelConstraints() {
     NSLayoutConstraint.activate([
       headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
@@ -139,7 +141,7 @@ extension RandomWordsCollectionView {
       
     ])
   }
-  
+  /// 設置 randomButton 的約束
   private func setupRandomButtonConstraints() {
     NSLayoutConstraint.activate([
       randomButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
@@ -147,7 +149,7 @@ extension RandomWordsCollectionView {
       randomButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
     ])
   }
-  
+  /// 設置 separatorView 的約束
   private func setupSeparatorViewConstraints() {
     NSLayoutConstraint.activate([
       separatorView.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 8),
@@ -156,7 +158,7 @@ extension RandomWordsCollectionView {
       separatorView.heightAnchor.constraint(equalToConstant: 1)
     ])
   }
-
+  /// 設置 collectionView 的約束
   private func setupCollectionViewConstraints() {
     NSLayoutConstraint.activate([
       collectionView.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 5),

@@ -10,9 +10,9 @@ import UIKit
 
 /// Theme Manager
 class ThemeManager {
+  
   // MARK: - Singleton
 
-//  static let shared = ThemeManager()
    init() {}
 
   // MARK: - Properties
