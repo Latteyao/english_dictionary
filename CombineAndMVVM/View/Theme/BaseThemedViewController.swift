@@ -60,6 +60,7 @@ extension BaseThemedViewController {
   /// 更新視圖中所有 UILabel 的文字顏色
   /// - Parameter color: 新的文字顏色
   private func updateTextColor(_ color: UIColor) {
+    // 遞迴遍歷所有子視圖，找到 UILabel 和 UIButton 並更新其文字顏色
     for subview in view.subviews {
       if let label = subview as? UILabel {
         label.textColor = color
@@ -75,6 +76,7 @@ extension BaseThemedViewController {
     if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
       // 如果顏色外觀有變化，可以在此處重新設置主題綁定
 //      setupThemeBinding()
+      themeViewModel.themeManager.notifyThemeChange()
       return
     }
   }

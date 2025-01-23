@@ -7,13 +7,15 @@
 
 import Foundation
 import UIKit
+import Combine
 
 /// Theme Manager
-class ThemeManager {
+class ThemeManager: ThemeManaging {
+  
   
   // MARK: - Singleton
 
-   init() {}
+  init() {}
 
   // MARK: - Properties
 
@@ -26,8 +28,15 @@ class ThemeManager {
   var currentTextColor: UIColor {
     return UITraitCollection.current.userInterfaceStyle == .dark ? .white : .black
   }
+
   /// 註冊 Notification
-  static let themeDidChangeNotification = Notification.Name("ThemeDidChangeNotification")
+//  static let themeDidChangeNotification = Notification.Name("ThemeDidChangeNotification")
+  
+  /// 主題變更的 Publisher
+  private let themeChangeSubject = PassthroughSubject<Void, Never>()
+      var themeDidChange: AnyPublisher<Void, Never> {
+          return themeChangeSubject.eraseToAnyPublisher()
+      }
 }
 
 extension ThemeManager {
@@ -50,6 +59,8 @@ extension ThemeManager {
 
   /// 發送主題更新通知
   func notifyThemeChange() {
-    NotificationCenter.default.post(name: ThemeManager.themeDidChangeNotification, object: nil)
+//    NotificationCenter.default.post(name: ThemeManager.themeDidChangeNotification, object: nil)
+    themeChangeSubject.send()
   }
 }
+

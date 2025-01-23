@@ -40,6 +40,7 @@
 		10A21C122D3655DE00E3EA51 /* CoreDataContextService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A21C112D3655DE00E3EA51 /* CoreDataContextService.swift */; };
 		10A21C152D36BEEB00E3EA51 /* BookmarkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A21C142D36BEEB00E3EA51 /* BookmarkService.swift */; };
 		10A21C1A2D3ABACD00E3EA51 /* WordDetailViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A21C192D3ABACD00E3EA51 /* WordDetailViewDelegate.swift */; };
+		10A21C262D42483F00E3EA51 /* ThemeManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A21C252D42483F00E3EA51 /* ThemeManaging.swift */; };
 		10A7E0E22D158901005EE4A4 /* DataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7E0E12D158901005EE4A4 /* DataViewModel.swift */; };
 		10A97E4F2D0991550007D8A5 /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A97E4E2D0991550007D8A5 /* SearchResultsViewController.swift */; };
 		10A97E512D0C16550007D8A5 /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A97E502D0C16550007D8A5 /* SearchManager.swift */; };
@@ -94,6 +95,7 @@
 		10A21C112D3655DE00E3EA51 /* CoreDataContextService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataContextService.swift; sourceTree = "<group>"; };
 		10A21C142D36BEEB00E3EA51 /* BookmarkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkService.swift; sourceTree = "<group>"; };
 		10A21C192D3ABACD00E3EA51 /* WordDetailViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordDetailViewDelegate.swift; sourceTree = "<group>"; };
+		10A21C252D42483F00E3EA51 /* ThemeManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManaging.swift; sourceTree = "<group>"; };
 		10A7E0E12D158901005EE4A4 /* DataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataViewModel.swift; sourceTree = "<group>"; };
 		10A97E4E2D0991550007D8A5 /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		10A97E502D0C16550007D8A5 /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				10BB136E2CF4F2A600C6D1F4 /* ThemeManager.swift */,
+				10A21C252D42483F00E3EA51 /* ThemeManaging.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -461,6 +464,7 @@
 				10A21C152D36BEEB00E3EA51 /* BookmarkService.swift in Sources */,
 				107080762C2D51F70069C139 /* APIManager.swift in Sources */,
 				107080B02C635FD80069C139 /* WordDataProvider.swift in Sources */,
+				10A21C262D42483F00E3EA51 /* ThemeManaging.swift in Sources */,
 				1070809F2C3FC0860069C139 /* RandomWordsCollectionView.swift in Sources */,
 				1070807A2C3568870069C139 /* WordsModel.swift in Sources */,
 				10BB13752CF9BFFE00C6D1F4 /* BookMarkModel.swift in Sources */,
