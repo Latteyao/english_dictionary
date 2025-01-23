@@ -13,15 +13,12 @@ class DetailWordCollectionController: UICollectionView {
   // MARK: - Properties
   var expandedIndexPaths = [IndexPath: Bool]()
   
-  var items: [WordResult] = [] {
-    didSet {
-      reloadData()
-    }
-  }
+  var items: [WordResult]
   
   // MARK: - Initializer
   
-  init() {
+  init(items: [WordResult]) {
+    self.items = items
     let layout = UICollectionViewFlowLayout()
     super.init(frame: .zero, collectionViewLayout: layout)
     self.delegate = self

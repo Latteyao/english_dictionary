@@ -137,7 +137,6 @@
 			isa = PBXGroup;
 			children = (
 				1070805C2C2C26340069C139 /* CombineAndMVVM */,
-				107080772C2D5C4D0069C139 /* MySecret.swift */,
 				1070805B2C2C26340069C139 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -153,6 +152,8 @@
 		1070805C2C2C26340069C139 /* CombineAndMVVM */ = {
 			isa = PBXGroup;
 			children = (
+				10A21C232D42201400E3EA51 /* AppConfiguration */,
+				10A21C242D4220B200E3EA51 /* CoreData */,
 				107E9B152D34DF2D008DC87D /* Services */,
 				107080742C2C29C40069C139 /* ViewModel */,
 				107080732C2C29BA0069C139 /* View */,
@@ -160,11 +161,6 @@
 				1070807B2C3699500069C139 /* Extension */,
 				1090CB862D27F596007B6AAA /* Resources */,
 				10BB4F4C2D2A5B3A00D0D87E /* Protocol */,
-				1070805D2C2C26340069C139 /* AppDelegate.swift */,
-				1070805F2C2C26340069C139 /* SceneDelegate.swift */,
-				107080662C2C26350069C139 /* Assets.xcassets */,
-				1070806B2C2C26350069C139 /* Info.plist */,
-				107917D12D00A1840053ADF2 /* CombineAndMVVM.xcdatamodeld */,
 			);
 			path = CombineAndMVVM;
 			sourceTree = "<group>";
@@ -263,7 +259,9 @@
 		1090CB862D27F596007B6AAA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				107080662C2C26350069C139 /* Assets.xcassets */,
 				1090CB872D27F62B007B6AAA /* words_dictionary.json */,
+				107080772C2D5C4D0069C139 /* MySecret.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -359,10 +357,28 @@
 		10A21C222D421AEB00E3EA51 /* WordResultView */ = {
 			isa = PBXGroup;
 			children = (
-				107080AD2C5CE7790069C139 /* DetailWordCollectionCellView.swift */,
 				107080AB2C5CE6B30069C139 /* DetailWordCollectionController.swift */,
+				107080AD2C5CE7790069C139 /* DetailWordCollectionCellView.swift */,
 			);
 			path = WordResultView;
+			sourceTree = "<group>";
+		};
+		10A21C232D42201400E3EA51 /* AppConfiguration */ = {
+			isa = PBXGroup;
+			children = (
+				1070805D2C2C26340069C139 /* AppDelegate.swift */,
+				1070805F2C2C26340069C139 /* SceneDelegate.swift */,
+				1070806B2C2C26350069C139 /* Info.plist */,
+			);
+			path = AppConfiguration;
+			sourceTree = "<group>";
+		};
+		10A21C242D4220B200E3EA51 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				107917D12D00A1840053ADF2 /* CombineAndMVVM.xcdatamodeld */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		10BB4F4C2D2A5B3A00D0D87E /* Protocol */ = {
