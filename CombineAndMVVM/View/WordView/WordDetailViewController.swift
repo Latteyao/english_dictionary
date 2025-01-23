@@ -83,7 +83,6 @@ class WordDetailViewController: BaseThemedViewController, ErrorDisplayable {
   override func viewDidLoad() {
     super.viewDidLoad()
     updateUI(with: data.wordData)
-//    isBookmarked = bookmarkViewModel.isBookmarkExist(title: data.wordData.word ?? "")
     configureUI()
 //    setupLabelTextColor()
     showError(data.error)
@@ -142,7 +141,7 @@ extension WordDetailViewController {
   }
   
   private func setupLabelTextColor() {
-//    mainWordLabel.textColor = ThemeManager.currentTextColor
+//    mainWordLabel.textColor = self.themeViewModel.currentTextColor
   }
   
   private func setupViewHierarchy() {

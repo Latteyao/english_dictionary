@@ -12,11 +12,11 @@ import UIKit
 protocol ThemeManaging {
   
   var currentBackgroundColor: UIColor { get }
+  
   var currentTextColor: UIColor { get }
-
-  func applyTheme(to view: UIView)
-  func notifyThemeChange()
-
+  
   var themeDidChange: AnyPublisher<Void, Never> { get }
+  
+  func notifyThemeChange()
 }
 
