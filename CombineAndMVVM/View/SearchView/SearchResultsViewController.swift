@@ -23,6 +23,15 @@ class SearchResultsViewController: BaseThemedViewController {
   private var bookmarkViewModel: BookmarkViewModel
 
   var cancellables: Set<AnyCancellable> = []
+  
+  /// 搜尋Text
+  var searchText: String? {
+    didSet {
+      if isViewLoaded {
+        searchForText()
+      }
+    }
+  }
 
   // MARK: - Initializer
 
