@@ -12,7 +12,6 @@ import Combine
 /// Theme Manager
 class ThemeManager: ThemeManaging {
   
-  
   // MARK: - Singleton
 
   init() {}
