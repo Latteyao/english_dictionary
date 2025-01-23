@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  CombineAndMVVM
 //
 //  Created by MacBook Pro on 2024/6/26.
@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class ViewController: BaseThemedViewController {
+class MainViewController: BaseThemedViewController {
   // MARK: - Properties
 
   // FIX - 必須加入 Loading 的畫面 不然會提早點入會沒有資料
@@ -54,7 +54,7 @@ class ViewController: BaseThemedViewController {
   }
 }
 
-extension ViewController{
+extension MainViewController{
   private func setupBindings() {
           dataViewModel.$randomData
               .receive(on: DispatchQueue.main)
@@ -70,7 +70,7 @@ extension ViewController{
 
 // MARK: - Search Bar Delegate Methods
 
-extension ViewController: UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
+extension MainViewController: UISearchControllerDelegate, UISearchResultsUpdating, UISearchBarDelegate {
   func updateSearchResults(for searchController: UISearchController) {}
 
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -86,7 +86,7 @@ extension ViewController: UISearchControllerDelegate, UISearchResultsUpdating, U
 
 // MARK: - UI Configuration
 
-extension ViewController {
+extension MainViewController {
   private func configureUI() {
     configureHeaderView() // 設置抬頭 View
     configureSearchController() // 設置搜尋 Controller
@@ -133,7 +133,7 @@ extension ViewController {
 
 // MARK: - Constraints
 
-extension ViewController {
+extension MainViewController {
   /// 相對位置設定
   private func configureConstraints() {
     setupRandomWordsCollectionViewConstraints()
@@ -162,7 +162,7 @@ extension ViewController {
 
 // MARK: - UICollectionViewDataSource
 
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate{
+extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate{
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return dataViewModel.randomData.count
   }
@@ -179,7 +179,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate{
 
 // MARK: - WordCollectionViewCellDelegate
 
-extension ViewController: WordCollectionViewCellDelegate {
+extension MainViewController: WordCollectionViewCellDelegate {
   func didTapReroll() {
     dataViewModel.reloadPopularWords()
   }
@@ -208,7 +208,7 @@ extension ViewController: WordCollectionViewCellDelegate {
 }
 
 
-extension ViewController: WordDetailViewDelegate {
+extension MainViewController: WordDetailViewDelegate {
   func wordDateilViewDidTapBookmarkbutton(_ title: String, data: WordData) {
     let isBookmarked: Bool = bookmarkViewModel.isBookmarkExist(name: title)
     if isBookmarked {

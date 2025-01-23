@@ -21,7 +21,7 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
   override func viewDidLoad() { // fix - Most add new view
     super.viewDidLoad()
     setupTabBarUI()
-    let homeVC = ViewController(viewModel: dataViewModel, bookmarkViewModel: bookmarkViewModel)
+    let homeVC = MainViewController(viewModel: dataViewModel, bookmarkViewModel: bookmarkViewModel)
     let bookmarkVC = BookmarkViewController(viewModel: dataViewModel, bookmarkViewModel: bookmarkViewModel)
     let firstNavigationController = UINavigationController(rootViewController: homeVC)
     let bookmarkNavigationController = UINavigationController(rootViewController: bookmarkVC)

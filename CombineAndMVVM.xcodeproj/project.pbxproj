@@ -11,7 +11,7 @@
 		104AD62C2D0C305600421612 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 104AD62B2D0C305600421612 /* SearchViewModel.swift */; };
 		1070805E2C2C26340069C139 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1070805D2C2C26340069C139 /* AppDelegate.swift */; };
 		107080602C2C26340069C139 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1070805F2C2C26340069C139 /* SceneDelegate.swift */; };
-		107080622C2C26340069C139 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107080612C2C26340069C139 /* ViewController.swift */; };
+		107080622C2C26340069C139 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107080612C2C26340069C139 /* MainViewController.swift */; };
 		107080672C2C26350069C139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 107080662C2C26350069C139 /* Assets.xcassets */; };
 		107080762C2D51F70069C139 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107080752C2D51F70069C139 /* APIManager.swift */; };
 		107080782C2D5C4D0069C139 /* MySecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107080772C2D5C4D0069C139 /* MySecret.swift */; };
@@ -65,7 +65,7 @@
 		1070805A2C2C26340069C139 /* CombineAndMVVM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CombineAndMVVM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1070805D2C2C26340069C139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1070805F2C2C26340069C139 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		107080612C2C26340069C139 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		107080612C2C26340069C139 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		107080662C2C26350069C139 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1070806B2C2C26350069C139 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		107080752C2D51F70069C139 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
@@ -220,7 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				10C9B31B2D20974100B03B34 /* LaunchViewController.swift */,
-				107080612C2C26340069C139 /* ViewController.swift */,
+				107080612C2C26340069C139 /* MainViewController.swift */,
 				10A97E4E2D0991550007D8A5 /* SearchResultsViewController.swift */,
 				1070807C2C3D1AD50069C139 /* TabBarController.swift */,
 				107080A22C4116D10069C139 /* BookmarkViewController.swift */,
@@ -409,7 +409,7 @@
 				107080AE2C5CE7790069C139 /* DetailWordCollectionCellView.swift in Sources */,
 				10AB30012D0828ED006A9F42 /* ResponseModel.swift in Sources */,
 				10A21C122D3655DE00E3EA51 /* CoreDataContextService.swift in Sources */,
-				107080622C2C26340069C139 /* ViewController.swift in Sources */,
+				107080622C2C26340069C139 /* MainViewController.swift in Sources */,
 				10C9B31C2D20974100B03B34 /* LaunchViewController.swift in Sources */,
 				107080AC2C5CE6B30069C139 /* DetailWordCollectionController.swift in Sources */,
 				107080A82C4F9C9E0069C139 /* HeaderView.swift in Sources */,
