@@ -5,38 +5,37 @@
 //  Created by MacBook Pro on 2024/6/26.
 //
 
-import UIKit
 import Combine
+import UIKit
 
 class MainViewController: BaseThemedViewController {
   // MARK: - Properties
 
-  // FIX - 必須加入 Loading 的畫面 不然會提早點入會沒有資料
   private var dataViewModel: DataViewModel
-  
+
   private var bookmarkViewModel: BookmarkViewModel
 
   private var searchController: UISearchController!
 
   var randomWordsCollectionView: RandomWordsCollectionView!
-  
+
   private var cancellables = Set<AnyCancellable>()
 
   private var headerView: HeaderView!
-  
-  
-  
-  
+
+  // MARK: - Initializer
 
   init(viewModel: DataViewModel, bookmarkViewModel: BookmarkViewModel) {
     self.dataViewModel = viewModel
     self.bookmarkViewModel = bookmarkViewModel
     super.init()
   }
-  
-   required init?(coder: NSCoder) {
+
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+
   // MARK: - View Lifecycle
 
   override func viewDidLoad() {
@@ -48,19 +47,19 @@ class MainViewController: BaseThemedViewController {
   }
 }
 
-extension MainViewController{
-  private func setupBindings() {
-          dataViewModel.$randomData
-              .receive(on: DispatchQueue.main)
-              .sink { [weak self] _ in
-                self?.randomWordsCollectionView.collectionView.reloadData()
-              }
-              .store(in: &cancellables)
-          
-          // 如果有其他需要綁定的屬性，可以在這裡添加
-      }
-}
+// MARK: - DataViewModel Binding
 
+extension MainViewController {
+  private func setupBindings() {
+    dataViewModel.$randomData
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] _ in
+        self?.randomWordsCollectionView.collectionView.reloadData()
+      }
+      .store(in: &cancellables)
+    // 如果有其他需要綁定的屬性，可以在這裡添加
+  }
+}
 
 // MARK: - Search Bar Delegate Methods
 
@@ -153,22 +152,19 @@ extension MainViewController {
   }
 }
 
-
 // MARK: - UICollectionViewDataSource
 
-extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate{
+extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return dataViewModel.randomData.count
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WordCell", for: indexPath) as! WordCollectionViewCell
     cell.configure(with: dataViewModel.randomData[indexPath.item].word)
     cell.delegate = self
     return cell
   }
-  
-  
 }
 
 // MARK: - WordCollectionViewCellDelegate
@@ -177,15 +173,14 @@ extension MainViewController: WordCollectionViewCellDelegate {
   func didTapReroll() {
     dataViewModel.reloadPopularWords()
   }
-  
+
   /// 按下按鈕事件觸發後頁面轉Detail View
   func didTapWordButton(in cell: WordCollectionViewCell) {
-    
     guard let indexPath = randomWordsCollectionView.collectionView.indexPath(for: cell) else { return }
     dataViewModel.loadRandomDataToDetailState(form: dataViewModel.randomData[indexPath.item])
     let wordDetailViewController = WordDetailViewController(data: dataViewModel.detailState,
                                                             bookmark: bookmarkViewModel,
-                                                            isbookmarked: self.bookmarkViewModel.isBookmarkExist(name: dataViewModel.randomData[indexPath.item].word))
+                                                            isbookmarked: bookmarkViewModel.isBookmarkExist(name: dataViewModel.randomData[indexPath.item].word))
     wordDetailViewController.wordDetailDelegate = self
     /// 轉換下一個畫面
     print("navigation push to \(wordDetailViewController)")
@@ -195,6 +190,7 @@ extension MainViewController: WordCollectionViewCellDelegate {
   }
 }
 
+// MARK: - WordDetailViewDelegate
 
 extension MainViewController: WordDetailViewDelegate {
   func wordDateilViewDidTapBookmarkbutton(_ title: String, data: WordData) {

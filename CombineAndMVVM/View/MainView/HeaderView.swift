@@ -8,6 +8,7 @@
 import UIKit
 
 class HeaderView: UIView {
+  
   // MARK: - UI Elements
 
   let headerTitleLabel: UILabel = {
