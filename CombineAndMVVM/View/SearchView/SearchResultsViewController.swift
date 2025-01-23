@@ -23,7 +23,7 @@ class SearchResultsViewController: BaseThemedViewController {
   private var bookmarkViewModel: BookmarkViewModel
 
   var cancellables: Set<AnyCancellable> = []
-  
+
   /// 搜尋Text
   var searchText: String? {
     didSet {
@@ -35,6 +35,11 @@ class SearchResultsViewController: BaseThemedViewController {
 
   // MARK: - Initializer
 
+  /// 初始化 SearchResultsViewController，注入所需的 ViewModel
+  /// - Parameters:
+  ///   - viewModel: DataViewModel 實例
+  ///   - searchViewModel: SearchViewModel 實例，默認為新的 SearchViewModel
+  ///   - bookmarkViewModel: BookmarkViewModel 實例
   init(
     viewModel: DataViewModel,
     searchViewModel: SearchViewModel = SearchViewModel(),
@@ -74,6 +79,7 @@ class SearchResultsViewController: BaseThemedViewController {
 // MARK: - UI Configuration
 
 extension SearchResultsViewController {
+  /// 根據搜尋文字更新界面，顯示搜尋結果標籤
   private func searchForText() {
     guard let searchText = searchText else { return }
     let label = UILabel()
@@ -87,6 +93,7 @@ extension SearchResultsViewController {
 // MARK: - SearchController
 
 extension SearchResultsViewController: UISearchResultsUpdating, UISearchBarDelegate {
+  /// 配置 UISearchController，設置代理和外觀
   private func configureSearchController() {
     searchController = UISearchController(searchResultsController: nil)
     searchController.searchBar.delegate = self
@@ -97,6 +104,8 @@ extension SearchResultsViewController: UISearchResultsUpdating, UISearchBarDeleg
     navigationItem.searchController = searchController
   }
 
+  /// 當搜尋結果更新時呼叫的方法，觸發搜尋操作並更新表格視圖
+  /// - Parameter searchController: UISearchController 實例
   func updateSearchResults(for searchController: UISearchController) {
     guard let query = searchController.searchBar.text else { return }
     searchViewModel.search(query: query) { [weak self] in
@@ -107,11 +116,16 @@ extension SearchResultsViewController: UISearchResultsUpdating, UISearchBarDeleg
     }
   }
 
+  /// 當使用者點擊取消按鈕時呼叫的方法，返回上一頁
+  /// - Parameter searchBar: UISearchBar 實例
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     navigationController?.popViewController(animated: true)
     // 聚焦搜尋列
   }
 
+  /// 當搜尋列即將開始編輯時呼叫的方法
+  /// - Parameter searchBar: UISearchBar 實例
+  /// - Returns: 是否允許開始編輯
   func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
     print("Search bar clicked")
     return true
@@ -121,6 +135,7 @@ extension SearchResultsViewController: UISearchResultsUpdating, UISearchBarDeleg
 // MARK: - UI Configuration
 
 extension SearchResultsViewController {
+  /// 配置 TableView，設置 dataSource 和  delegate ，並註冊自訂的 Cell
   func configureTableView() {
     resultsTableView = UITableView()
     resultsTableView.dataSource = self
@@ -136,21 +151,36 @@ extension SearchResultsViewController {
 // MARK: - TableView Delegate Methods
 
 extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSource {
+  /// 設定表格視圖中每個 section 的行數
+  /// - Parameters:
+  ///   - tableView: UITableView 實例
+  ///   - section: section 的索引
+  /// - Returns: 行數
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return searchViewModel.searchResults.results.data?.count ?? 0
   }
 
+  /// 配置表格視圖中的每個 Cell
+  /// - Parameters:
+  ///   - tableView: UITableView 實例
+  ///   - indexPath: Cell 的位置
+  /// - Returns: 配置好的 UITableViewCell
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "bookmarkCell", for: indexPath) as! BookmarkCellView
     cell.configure(with: searchViewModel.searchResults.results.data?[indexPath.row] ?? "")
     return cell
   }
 
+  /// 當使用者選擇某一行時呼叫的方法，觸發單詞的詳細信息抓取
+  /// - Parameters:
+  ///   - tableView: UITableView 實例
+  ///   - indexPath: 被選中的 Cell 的位置
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     guard let resultdata = searchViewModel.searchResults.results.data?[indexPath.row] else { return }
     dataViewModel.fetchSingleWord(resultdata)
   }
 
+  /// 滾動表格視圖到頂部
   private func scrollToTop() {
     resultsTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .bottom, animated: true)
   }
@@ -159,10 +189,12 @@ extension SearchResultsViewController: UITableViewDelegate, UITableViewDataSourc
 // MARK: - Constraints
 
 extension SearchResultsViewController {
+  /// 配置所有子視圖的約束
   private func configureConstraints() {
     setupTableView()
   }
 
+  /// 設置 resultsTableView 的具體約束
   private func setupTableView() {
     NSLayoutConstraint.activate([
       resultsTableView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -173,9 +205,13 @@ extension SearchResultsViewController {
   }
 }
 
-// MARK: - Delegate
+// MARK: - WordDetailViewDelegate
 
 extension SearchResultsViewController: WordDetailViewDelegate {
+  /// 當使用者點擊書籤按鈕時呼叫的方法，根據當前狀態添加或刪除書籤
+  /// - Parameters:
+  ///   - title: 單詞的標題
+  ///   - data: 單詞的詳細數據
   func wordDateilViewDidTapBookmarkbutton(_ title: String, data: WordData) {
     let isBookmarked: Bool = bookmarkViewModel.isBookmarkExist(name: title)
     if isBookmarked {
@@ -186,9 +222,10 @@ extension SearchResultsViewController: WordDetailViewDelegate {
   }
 }
 
-// MARK: - Bindings
+// MARK: - DataViewModel Bindings
 
 extension SearchResultsViewController {
+  /// 設置 Combine 的綁定，監聽 DataViewModel 的 detailState 變化並導航到詳細視圖
   private func setupBindings() {
     dataViewModel.$detailState
       .receive(on: DispatchQueue.main)
