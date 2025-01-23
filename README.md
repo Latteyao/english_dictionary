@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/Latteyao/english_dictionary/blob/main/CombineAndMVVM/Assets.xcassets/AppIcon.appiconset/EnglishDictionaryIcon%20.png" width="200" />
+<img src="https://github.com/Latteyao/english_dictionary/blob/main/CombineAndMVVM/Resources/Assets.xcassets/AppIcon.appiconset/EnglishDictionaryIcon%20.png" width="200" />
 </p>
 
  
