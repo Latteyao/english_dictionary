@@ -10,7 +10,7 @@ import Foundation
 
 /// 負責管理「單字資料」的存取與抓取
 /// 同時實作了本地資料協議 (WordDataService) 與網路抓取協議 (WordDataFetcher)
-class WordDataProvider: WordDataService, WordDataFetcher {
+class WordDataProvider: WordDataService {
   // MARK: - Singleton
   
   /// 網路服務，負責 API 請求
