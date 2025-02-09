@@ -35,12 +35,3 @@ extension MockDataDecodable{
     }
   }
 }
-
-
-//protocol MockingData:MockDataService {
-//  var stub: Data { get }
-//}
-//
-//protocol GeneralMockingData: MockingData {}
-//protocol RandomMockingData: MockingData {}
-//protocol SearchMockingData: MockingData {}
