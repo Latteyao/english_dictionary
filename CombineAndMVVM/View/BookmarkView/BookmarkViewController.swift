@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 // 繼承自 BaseThemedViewController，用於顯示和管理書籤列表
-class BookmarkViewController: BaseThemedViewController {
+class BookmarkViewController: BaseThemedViewController, ErrorDisplayable {
   // MARK: - Properties
 
   var dataViewModel: DataViewModel
@@ -42,6 +42,7 @@ class BookmarkViewController: BaseThemedViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupCoreDataErrorHandling()
     setupView()
     configureUI()
     setupConstraints()
@@ -88,6 +89,14 @@ extension BookmarkViewController {
     tableView.rowHeight = UITableView.automaticDimension // 自動行高
     tableView.estimatedRowHeight = 44 // 估計高度
     tableView.register(BookmarkCellView.self, forCellReuseIdentifier: "bookmarkCell")
+  }
+  /// 設置 CoreDataRepository 的錯誤處理回調,和畫面的顯示
+  private func setupCoreDataErrorHandling(){
+    bookmarkViewModel.bookmarkManager.coreDataRepository.onError = { [weak self] errorMessage in
+            DispatchQueue.main.async {
+                self?.showError(errorMessage) // 顯示錯誤訊息
+            }
+        }
   }
 }
 

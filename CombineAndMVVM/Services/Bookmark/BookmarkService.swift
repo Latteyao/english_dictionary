@@ -7,7 +7,9 @@
 
 import Foundation
 
-protocol BookmarkService: BookmarkDuplicating, BookmarkSaving, BookmarkFetching, BookmarkDeleting {}
+protocol BookmarkService: BookmarkDuplicating, BookmarkSaving, BookmarkFetching, BookmarkDeleting {
+  var coreDataRepository: CoreDataContextService { get set }
+}
 
 /// 判斷書籤是否重複
 protocol BookmarkDuplicating {

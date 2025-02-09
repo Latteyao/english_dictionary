@@ -11,7 +11,7 @@ import Foundation
 class BookmarkManager: BookmarkService {
   // MARK: - Singleton
 
-  private let coreDataRepository: CoreDataContextService
+ var coreDataRepository: CoreDataContextService
 
   // MARK: - Initializer
 
