@@ -37,7 +37,12 @@ extension SearchManager {
   func performSearch(with query: String, completion: @escaping (Result<ResponseModel, NetworkError>) -> Void) {
     let endpoint = Endpoint.RequestPath.search(for: query)
     wordApiManager.fetchData(endpoint)
-      .handleEvents()
+      .handleEvents(
+        receiveSubscription: { _ in print("開始訂閱 API Call") },
+        receiveOutput: { output in print("收到結果: \(output)") },
+        receiveCompletion: { completion in print("請求完成: \(completion)") },
+        receiveCancel: { print("請求被取消") }
+      )
       .sink { completionResult in
         switch completionResult {
         case .failure(let error):
