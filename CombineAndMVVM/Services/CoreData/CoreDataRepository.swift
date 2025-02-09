@@ -10,7 +10,11 @@ import Foundation
 
 class CoreDataRepository: CoreDataContextService{
   
-  init() {}
+  var onError: ((String) -> Void)?
+  
+  init(onError: ((String) -> Void)? = nil) {
+    self.onError = onError
+  }
 
   // MARK: - Core Data Stack
 
@@ -19,7 +23,8 @@ class CoreDataRepository: CoreDataContextService{
     let container = NSPersistentContainer(name: "CombineAndMVVM")
     container.loadPersistentStores { _, error in
       if let error = error {
-        fatalError("Core Data stack initialization error: \(error)")
+        print("❌ Core Data stack initialization error: \(error.localizedDescription)")
+        self.onError?("Core Data 初始化失敗：\(error.localizedDescription)")
       }
     }
     return container

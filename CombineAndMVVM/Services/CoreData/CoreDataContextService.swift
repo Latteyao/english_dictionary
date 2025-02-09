@@ -8,7 +8,7 @@
 import CoreData
 import Foundation
 
-protocol CoreDataContextService: CoreDataSavable, CoreDataEntityDeletable{
+protocol CoreDataContextService: CoreDataSavable, CoreDataEntityDeletable, CoreDataErrorNotifiable{
   var context: NSManagedObjectContext { get }
 }
 /// 負責存檔功能的協議
@@ -60,4 +60,8 @@ extension CoreDataEntityDeletable where Self: CoreDataContextService {
       print("Failed to delete \(entityName) data: \(error)")
     }
   }
+}
+/// CoreData 錯誤通知
+protocol CoreDataErrorNotifiable {
+  var onError: ((String) -> Void)? { get set }
 }

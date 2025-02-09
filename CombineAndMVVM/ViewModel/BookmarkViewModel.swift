@@ -13,7 +13,7 @@ class BookmarkViewModel: ObservableObject {
   
   @Published var bookmarks: [Bookmark] = []
   
-  private let bookmarkManager: BookmarkService
+    var bookmarkManager: BookmarkService
   
   
   // MARK: - Initializer
