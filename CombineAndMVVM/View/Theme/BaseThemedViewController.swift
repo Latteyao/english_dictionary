@@ -46,6 +46,7 @@ extension BaseThemedViewController {
     // 監聽當前背景色的變化，並更新視圖的背景顏色
     themeViewModel.$currentBackgroundColor
       .sink { [weak self] color in
+        print("🎨 更新背景顏色: \(color)")
         self?.view.backgroundColor = color
       }
       .store(in: &cancellables)
@@ -75,7 +76,7 @@ extension BaseThemedViewController {
     // 檢查顏色外觀是否正確
     if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
       // 如果顏色外觀有變化，可以在此處重新設置主題綁定
-//      setupThemeBinding()
+      print("🎨 顏色外觀變更！")
       themeViewModel.themeManager.notifyThemeChange()
       return
     }

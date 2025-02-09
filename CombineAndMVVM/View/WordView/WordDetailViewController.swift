@@ -123,9 +123,11 @@ extension WordDetailViewController {
   
   private func configureBackButton() {
     let backButton = UIButton(type: .system)
-    backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+    let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+    backButton.setImage(UIImage(systemName: "chevron.backward",withConfiguration: config), for: .normal)
     backButton.setTitle("", for: .normal)
     backButton.addTarget(self, action: #selector(backButtonPressed), for: .touchUpInside)
+   
             
     // Add a UIContextMenuInteraction to disable the long press menu
     let interaction = UIContextMenuInteraction(delegate: self)
@@ -134,6 +136,7 @@ extension WordDetailViewController {
     // Set the custom back button as the left bar button item
     navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     navigationController?.interactivePopGestureRecognizer?.delegate = self
+    navigationController?.interactivePopGestureRecognizer?.isEnabled = true
   }
   
   private func configureBookmarkButton() {
@@ -177,6 +180,7 @@ extension WordDetailViewController: UIContextMenuInteractionDelegate {
 
 extension WordDetailViewController: UIGestureRecognizerDelegate {
   func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    print("gestureRecognizerShouldBegin 被呼叫")
     return true
   }
 }
@@ -206,19 +210,12 @@ extension WordDetailViewController {
   }
   
   @objc func bookmarkButtonPressed() {
-//    guard let dataViewModel = dataViewModel else { return }
-//    guard let word = data.wordData.word else { return }
-//    if isBookmarked {
-//      bookmarkViewModel.addBookmark(title: word, data: data.wordData)
-//    } else {
-//      bookmarkViewModel.deleteBookmark(title: word)
-//    }
     guard let title = data.wordData.word else { return }
     print("is nil \(wordDetailDelegate == nil)")
     wordDetailDelegate?.wordDateilViewDidTapBookmarkbutton(title, data: data.wordData)
     // 創建新的 UIBarButtonItem，並更新圖示
     isBookmarked.toggle()
-//    print("isBookmarked: \(isBookmarked)")
+    print("isBookmarked: \(isBookmarked)")
     updateBookmarkButtonState()
   }
 }
